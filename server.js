@@ -2,6 +2,7 @@ const cors = require('cors')
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const { testrouter } = require('./Routes/testrouter.js')
+const { testc2 } = require('./Controllers/testcontroller.js')
 
 // import cors from 'cors'
 // import express from 'express'
