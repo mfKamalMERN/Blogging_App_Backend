@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SlayerSani/Lalala_SupemeLeader_Blogs_Backend.git"
+    "url": "git+https://github.com/mfKamalMERN/Blogging_App_Backend.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/SlayerSani/Lalala_SupemeLeader_Blogs_Backend/issues"
+    "url": "https://github.com/mfKamalMERN/Blogging_App_Backend/issues"
   },
-  "homepage": "https://github.com/SlayerSani/Lalala_SupemeLeader_Blogs_Backend#readme",
+  "homepage": "https://github.com/mfKamalMERN/Blogging_App_Backend#readme",
   "dependencies": {
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
