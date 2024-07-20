@@ -13,17 +13,35 @@ exports.SignUp = async (req, res) => {
     }
 
     else {
-
         try {
-            await userModel.create({ Name: name, Email: email, Password: password })
+            const founduser = await userModel.findOne({ Email: email })
 
-            res.json(`Hi ${name}! Welcome to blogging app, Please proceed to login!`)
+            if (founduser) {
+                res.json(`User with ${email} is already registered.`)
+            }
+
+            else {
+
+                try {
+                    await userModel.create({ Name: name, Email: email, Password: password })
+
+                    res.json(`Hi ${name}! Welcome to blogging app, Please proceed to login!`)
+
+                } catch (error) {
+                    console.log(error);
+
+                }
+
+            }
 
         } catch (error) {
             console.log(error);
-            // res.json(error)
         }
+
     }
+
+
+
 
 }
 
