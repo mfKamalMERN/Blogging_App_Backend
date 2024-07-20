@@ -40,9 +40,6 @@ exports.SignUp = async (req, res) => {
 
     }
 
-
-
-
 }
 
 
