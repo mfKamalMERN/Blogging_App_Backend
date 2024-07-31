@@ -1,11 +1,24 @@
 const blogModel = require("../Models/blogmodel")
+const userModel = require("../Models/usermodel")
 
 exports.CreateBlog = (req, res) => {
 
     const { blogstring } = req.body
 
     blogModel.create({ Blog: blogstring, Owner: req.user._id })
-        .then(res.json(`Blog created`))
+        .then(async (createdBlog) => {
+            try {
+                const createdBlogOwner = await userModel.findById({ _id: createdBlog.Owner })
+                createdBlogOwner.Blogs.push(createdBlog._id)
+
+                await createdBlogOwner.save()
+
+                res.json(`Blog created`)
+
+            } catch (error) {
+                console.log(error);
+            }
+        })
         .catch(er => console.log(er))
 
 }
