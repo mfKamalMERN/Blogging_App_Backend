@@ -151,3 +151,27 @@ exports.UploadProfilePic = async (req, res) => {
     }
 }
 
+exports.UpdatePassword = (req, res) => {
+    const { newpassword } = req.body
+
+    const errorV = validationResult(req)
+
+    if (!errorV.isEmpty()) res.json({ ValidationError: true, ActError: errorV.array() })
+    else {
+
+        userModel.findById({ _id: req.user._id })
+            .then(async (loggeduser) => {
+                if (loggeduser.Password === newpassword) res.json(`Please type a new password`)
+                else {
+                    loggeduser.Password = newpassword
+
+                    await loggeduser.save()
+
+                    res.json(`Password updated for ${loggeduser.Name}`)
+                }
+            })
+            .catch(er => console.log(er))
+    }
+
+}
+
