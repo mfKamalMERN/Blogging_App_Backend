@@ -117,3 +117,21 @@ exports.EditComment = async (req, res) => {
     }
 
 }
+
+exports.EditBlogText = async (req, res) => {
+    const blogid = req.params.blogid
+    const newblog = req.body.updatedblog
+
+    try {
+        const tblog = await blogModel.findById({ _id: blogid })
+
+        tblog.Blog = newblog
+
+        await tblog.save()
+
+        res.json({ Status: `Blog Updated`, NewBlog: tblog.Blog })
+
+    } catch (error) {
+        console.log(error);
+    }
+}
