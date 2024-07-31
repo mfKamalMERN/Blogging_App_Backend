@@ -8,8 +8,11 @@ exports.CreateBlog = (req, res) => {
 
     blogModel.create({ Blog: blogstring, Owner: req.user._id })
         .then(async (createdBlog) => {
+
             try {
+
                 const createdBlogOwner = await userModel.findById({ _id: createdBlog.Owner })
+
                 createdBlogOwner.Blogs.push(createdBlog._id)
 
                 await createdBlogOwner.save()
