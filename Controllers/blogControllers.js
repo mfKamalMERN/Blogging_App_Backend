@@ -1,6 +1,7 @@
 const blogModel = require("../Models/blogmodel")
 const userModel = require("../Models/usermodel")
 
+
 exports.CreateBlog = (req, res) => {
 
     const { blogstring } = req.body
