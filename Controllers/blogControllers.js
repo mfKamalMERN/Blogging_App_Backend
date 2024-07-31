@@ -74,22 +74,46 @@ exports.DeleteComment = (req, res) => {
     const { blogid, commentid } = req.params
 
     blogModel.findById({ _id: blogid })
-        .then(async targetblog => {
-            const index = targetblog.Comments.findIndex((cmnt) => cmnt._id == commentid)
-            if (index < 0) res.json(`Comment not found`)
-            else {
+        .then(async (targetblog) => {
 
+            const index = targetblog.Comments.findIndex((cmnt) => cmnt._id == commentid)
+
+            if (index < 0) res.json(`Comment not found`)
+
+            else {
+                // const tcomment = targetblog.Comments.find((cmn) => cmn._id == commentid)
                 targetblog.Comments.splice(index, 1)
 
                 await targetblog.save()
 
                 res.json({ Status: `Comment removed`, Index: index })
             }
-
+            // else res.json(`Invalid Request`)
         })
         .catch(er => {
             console.log(er)
             res.json(er)
         })
+
+}
+
+exports.EditComment = async (req, res) => {
+    const { blogid, commentid } = req.params
+    const newcomment = req.body.newcomment
+    
+    try {
+
+        const targetblog = await blogModel.findById({ _id: blogid })
+        const targetcomment = targetblog.Comments.find((cmnt) => cmnt._id == commentid)
+
+        // if (targetcomment.CommentedBy != luser) res.json(`Invalid Request`)
+        // else {
+            targetcomment.Comment = newcomment
+            await targetblog.save()
+            res.json({ Status: `Comment edited`, UpdatedComment: targetcomment.Comment })
+        // }
+    } catch (error) {
+        console.log(error);
+    }
 
 }

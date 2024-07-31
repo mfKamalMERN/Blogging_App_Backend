@@ -1,6 +1,6 @@
 const express = require("express")
 const VerifyToken = require("../VerifyToken/VerifyToken")
-const { CreateBlog, LikeUnlikeBlog, AddComment, DeleteComment } = require("../Controllers/blogControllers.js")
+const { CreateBlog, LikeUnlikeBlog, AddComment, DeleteComment, EditComment } = require("../Controllers/blogControllers.js")
 
 const blogRouter = express.Router()
 
@@ -11,5 +11,7 @@ blogRouter.patch('/likeunlikeblog/:blogid', VerifyToken, LikeUnlikeBlog)
 blogRouter.post('/addcomment/:blogid', VerifyToken, AddComment)
 
 blogRouter.patch('/deletecomment/:blogid/:commentid', VerifyToken, DeleteComment)
+
+blogRouter.patch('/editcomment/:blogid/:commentid', VerifyToken, EditComment)
 
 module.exports = blogRouter
