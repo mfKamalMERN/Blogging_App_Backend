@@ -61,7 +61,7 @@ exports.Login = (req, res) => {
 
                     if (user.Password === password) {
 
-                        const token = jwt.sign({ _id: user._id }, "jwt-secret-key", { expiresIn: "1h" })
+                        const token = jwt.sign({ _id: user._id }, "jwt-secret-key", { expiresIn: "24h" })
 
                         res.cookie('token', token)
 
@@ -125,5 +125,14 @@ exports.FollowUnfollow = async (req, res) => {
 
 exports.Logout = (req, res) => {
     res.clearCookie('token').json(`${req.user.Name} Logged Out`)
+}
+
+exports.MyProfile = (req, res) => {
+    const luser = req.user._id
+
+    userModel.findById({ _id: luser })
+        .then(user => res.json({ Profile: user }))
+        .catch(er => console.log(er))
+
 }
 

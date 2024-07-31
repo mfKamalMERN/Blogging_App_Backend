@@ -1,6 +1,7 @@
 
+
 exports.CorsOptions = {
     origin: [],
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }
