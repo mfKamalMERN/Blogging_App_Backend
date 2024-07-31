@@ -35,7 +35,7 @@ exports.LikeUnlikeBlog = async (req, res) => {
 
 
     } catch (error) {
-        console.log(error);
+        console.log(`Error:${error}`);
     }
 
 }
