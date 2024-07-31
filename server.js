@@ -18,6 +18,6 @@ ConnectDB()
 
 app.use('/', userRouter)
 
-const port = 9080
+const port = 7500
 
 app.listen(port, () => console.log(`Server running at port ${port}`))
