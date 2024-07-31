@@ -39,3 +39,33 @@ exports.LikeUnlikeBlog = async (req, res) => {
     }
 
 }
+
+exports.AddComment = async (req, res) => {
+    const blogid = req.params.blogid
+    const { comment } = req.body
+
+    try {
+
+        const targetblog = await blogModel.findById({ _id: blogid })
+        targetblog.Comments.push({ Comment: comment, CommentedBy: req.user._id })
+
+        await targetblog.save()
+        const a = 10
+
+
+        const pr = new Promise((res, rej) => {
+            if (a >= 6) res("Comment Added")
+
+            else rej("Error: Can't add comment")
+
+        })
+
+        pr.then((result) => {
+            res.json({ result, Comment: targetblog.Comments.find((cmnt) => cmnt.Comment === comment) })
+        }).catch(er => res.json(er))
+
+    } catch (error) {
+        console.log(error);
+    }
+
+}
