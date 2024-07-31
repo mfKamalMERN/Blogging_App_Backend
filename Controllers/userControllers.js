@@ -127,3 +127,12 @@ exports.Logout = (req, res) => {
     res.clearCookie('token').json(`${req.user.Name} Logged Out`)
 }
 
+exports.MyProfile = (req, res) => {
+    const luser = req.user._id
+
+    userModel.findById({ _id: luser })
+        .then(user => res.json({ Profile: user }))
+        .catch(er => console.log(er))
+
+}
+
