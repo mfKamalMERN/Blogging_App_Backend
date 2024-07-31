@@ -100,7 +100,7 @@ exports.DeleteComment = (req, res) => {
 exports.EditComment = async (req, res) => {
     const { blogid, commentid } = req.params
     const newcomment = req.body.newcomment
-    
+
     try {
 
         const targetblog = await blogModel.findById({ _id: blogid })
@@ -108,9 +108,9 @@ exports.EditComment = async (req, res) => {
 
         // if (targetcomment.CommentedBy != luser) res.json(`Invalid Request`)
         // else {
-            targetcomment.Comment = newcomment
-            await targetblog.save()
-            res.json({ Status: `Comment edited`, UpdatedComment: targetcomment.Comment })
+        targetcomment.Comment = newcomment
+        await targetblog.save()
+        res.json({ Status: `Comment edited`, UpdatedComment: targetcomment.Comment })
         // }
     } catch (error) {
         console.log(error);
