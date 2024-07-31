@@ -136,3 +136,18 @@ exports.MyProfile = (req, res) => {
 
 }
 
+exports.UploadProfilePic = async (req, res) => {
+    const file = req.file
+
+    try {
+        const loggeduser = await userModel.findById({ _id: req.user._id })
+        loggeduser.DP = `http://localhost:7500/Images/${file.filename}`
+        await loggeduser.save()
+
+        res.json(`Profile Pic updated for ${loggeduser.Name}`)
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+

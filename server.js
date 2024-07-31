@@ -10,7 +10,7 @@ const blogRouter = require('./Routes/blogRouter.js')
 const app = express()
 
 app.use(express.json())
-
+app.use(express.static('./Public'))
 app.use(cors(CorsOptions))
 
 app.use(cookieParser())
