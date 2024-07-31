@@ -69,3 +69,27 @@ exports.AddComment = async (req, res) => {
     }
 
 }
+
+exports.DeleteComment = (req, res) => {
+    const { blogid, commentid } = req.params
+
+    blogModel.findById({ _id: blogid })
+        .then(async targetblog => {
+            const index = targetblog.Comments.findIndex((cmnt) => cmnt._id == commentid)
+            if (index < 0) res.json(`Comment not found`)
+            else {
+
+                targetblog.Comments.splice(index, 1)
+
+                await targetblog.save()
+
+                res.json({ Status: `Comment removed`, Index: index })
+            }
+
+        })
+        .catch(er => {
+            console.log(er)
+            res.json(er)
+        })
+
+}
