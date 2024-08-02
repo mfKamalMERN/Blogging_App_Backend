@@ -51,7 +51,7 @@ exports.Login = (req, res) => {
     const errorV = validationResult(req)
 
     if (!errorV.isEmpty()) {
-        res.json({ Msg: "Validation Error", actError: errorV.array() })
+        res.json({ ValidationError: true, actError: errorV.array() })
     }
 
     else {
@@ -65,7 +65,7 @@ exports.Login = (req, res) => {
 
                         res.cookie('token', token)
 
-                        res.json({ Msg: `Welcome ${user.Name}! `, Token: token })
+                        res.json({ LoggedIn: true, Msg: `Welcome ${user.Name}! `, Token: token })
 
                     }
                     else res.json(`Incorrect Password`)
