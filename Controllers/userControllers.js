@@ -10,7 +10,7 @@ exports.SignUp = async (req, res) => {
     const errorV = validationResult(req)
 
     if (!errorV.isEmpty()) {
-        res.json({ Msg: "Validation Error", actError: errorV.array() })
+        res.json({ ValidationError: true, actError: errorV.array() })
     }
 
     else {

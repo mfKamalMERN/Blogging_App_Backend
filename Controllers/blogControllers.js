@@ -1,6 +1,13 @@
 const { validationResult } = require("express-validator")
-const blogModel = require("../Models/blogmodel")
-const userModel = require("../Models/usermodel")
+const blogModel = require("../Models/blogmodel.js")
+const userModel = require("../Models/usermodel.js")
+
+
+exports.getAllBlogs = (req, res) => {
+    blogModel.find()
+        .then((blogs) => res.json({ AllBlogs: blogs }))
+        .catch(er => console.log(er))
+}
 
 
 exports.CreateBlog = (req, res) => {

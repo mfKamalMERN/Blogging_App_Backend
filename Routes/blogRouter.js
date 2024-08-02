@@ -1,9 +1,11 @@
 const express = require("express")
 const VerifyToken = require("../VerifyToken/VerifyToken")
-const { CreateBlog, LikeUnlikeBlog, AddComment, DeleteComment, EditComment, EditBlogText } = require("../Controllers/blogControllers.js")
+const { CreateBlog, LikeUnlikeBlog, AddComment, DeleteComment, EditComment, EditBlogText, getAllBlogs } = require("../Controllers/blogControllers.js")
 const { blogTextValidation, updateBlogTextValidation } = require("../Validations/blogValidations.js")
 
 const blogRouter = express.Router()
+
+blogRouter.get('/getallblogs', VerifyToken, getAllBlogs)
 
 blogRouter.post('/createblog', VerifyToken, blogTextValidation, CreateBlog)
 
