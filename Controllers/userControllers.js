@@ -18,7 +18,7 @@ exports.SignUp = async (req, res) => {
             const founduser = await userModel.findOne({ Email: email })
 
             if (founduser) {
-                res.json(`User with ${email} is already registered.`)
+                res.json({ AlreadyRegistered: true, Msg: `User with ${email} is already registered.` })
             }
 
             else {
