@@ -78,8 +78,6 @@ exports.Login = (req, res) => {
     }
 }
 
-
-
 exports.FollowUnfollow = async (req, res) => {
     const { userid } = req.params
 
@@ -174,4 +172,25 @@ exports.UpdatePassword = (req, res) => {
     }
 
 }
+
+exports.UpdateName = (req, res) => {
+    const newName = req.body.newName
+
+    const errorV = validationResult(req)
+
+    if (!errorV.isEmpty()) res.json({ ValidationError: true, ActError: errorV.array() })
+
+    else {
+        userModel.findByIdAndUpdate({ _id: req.user._id }, { Name: newName })
+            .then((user) => {
+                if (user.Name === newName) res.json(`${newName} is already existing`)
+                else res.json(`Name updated from ${user.Name} to ${newName}`)
+            })
+            .catch(er => console.log(er))
+
+    }
+
+}
+
+
 
