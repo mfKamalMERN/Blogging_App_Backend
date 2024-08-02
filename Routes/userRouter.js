@@ -1,6 +1,6 @@
 const express = require('express')
-const { SignUp, Login, FollowUnfollow, Logout, MyProfile, UploadProfilePic, UpdatePassword } = require('../Controllers/userControllers.js')
-const { signUpValidation, loginValidation, updatePasswordValidation } = require('../Validations/userValidations.js')
+const { SignUp, Login, FollowUnfollow, Logout, MyProfile, UploadProfilePic, UpdatePassword, UpdateName } = require('../Controllers/userControllers.js')
+const { signUpValidation, loginValidation, updatePasswordValidation, updateNameValidation } = require('../Validations/userValidations.js')
 const VerifyToken = require('../VerifyToken/VerifyToken.js')
 const { upload } = require('../Multer/Multer.js')
 
@@ -23,6 +23,8 @@ userRouter.get('/myprofile', VerifyToken, MyProfile)
 userRouter.put('/uploadprofilepic', VerifyToken, upload.single('file'), UploadProfilePic)
 
 userRouter.patch('/updatepassword', VerifyToken, updatePasswordValidation, UpdatePassword)
+
+userRouter.patch('/updatename', VerifyToken, updateNameValidation, UpdateName)
 
 
 
