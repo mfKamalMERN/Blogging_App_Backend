@@ -1,13 +1,37 @@
+const { validationResult } = require("express-validator")
 const blogModel = require("../Models/blogmodel")
+const userModel = require("../Models/usermodel")
+
 
 exports.CreateBlog = (req, res) => {
 
     const { blogstring } = req.body
 
-    blogModel.create({ Blog: blogstring, Owner: req.user._id })
-        .then(res.json(`Blog created`))
-        .catch(er => console.log(er))
+    const errorV = validationResult(req)
 
+    if (!errorV.isEmpty()) res.json({ ValidationError: true, ActError: errorV.array() })
+
+    else {
+        blogModel.create({ Blog: blogstring, Owner: req.user._id })
+            .then(async (createdBlog) => {
+
+                try {
+
+                    const createdBlogOwner = await userModel.findById({ _id: createdBlog.Owner })
+
+                    createdBlogOwner.Blogs.push(createdBlog._id)
+
+                    await createdBlogOwner.save()
+
+                    res.json(`Blog created`)
+
+                } catch (error) {
+                    console.log(error);
+                }
+            })
+            .catch(er => console.log(er))
+
+    }
 }
 
 exports.LikeUnlikeBlog = async (req, res) => {
@@ -122,16 +146,22 @@ exports.EditBlogText = async (req, res) => {
     const blogid = req.params.blogid
     const newblog = req.body.updatedblog
 
-    try {
-        const tblog = await blogModel.findById({ _id: blogid })
+    const errorV = validationResult(req)
 
-        tblog.Blog = newblog
+    if (!errorV.isEmpty()) res.json({ ValidationError: true, ActError: errorV.array() })
+    else {
 
-        await tblog.save()
+        try {
+            const tblog = await blogModel.findById({ _id: blogid })
 
-        res.json({ Status: `Blog Updated`, NewBlog: tblog.Blog })
+            tblog.Blog = newblog
 
-    } catch (error) {
-        console.log(error);
+            await tblog.save()
+
+            res.json({ Status: `Blog Updated`, NewBlog: tblog.Blog })
+
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
