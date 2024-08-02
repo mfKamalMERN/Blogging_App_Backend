@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 
 exports.SignUp = async (req, res) => {
 
-    const { name, email, password } = req.body
+    const { name, email, password, contact } = req.body
 
     const errorV = validationResult(req)
 
@@ -24,7 +24,7 @@ exports.SignUp = async (req, res) => {
             else {
 
                 try {
-                    await userModel.create({ Name: name, Email: email, Password: password })
+                    await userModel.create({ Name: name, Email: email, Password: password, Contact: contact })
 
                     res.json(`Hi ${name}! Welcome to blogging app, Please proceed to login!`)
 
