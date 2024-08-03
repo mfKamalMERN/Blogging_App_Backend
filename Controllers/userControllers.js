@@ -65,7 +65,7 @@ exports.Login = (req, res) => {
 
                         res.cookie('token', token)
 
-                        res.json({ LoggedIn: true, Msg: `Welcome ${user.Name}! `, Token: token })
+                        res.json({ LoggedIn: true, Msg: `Welcome ${user.Name}! `, Token: token, LoggedUser: user })
 
                     }
                     else res.json(`Incorrect Password`)
@@ -190,6 +190,22 @@ exports.UpdateName = (req, res) => {
 
     }
 
+}
+
+exports.getUserDp = (req, res) => {
+    const { userid } = req.params
+
+    userModel.findById({ _id: userid })
+        .then((user) => res.json(user.DP))
+        .catch(er => console.log(er))
+}
+
+exports.getOwnerName = (req, res) => {
+    const { userid } = req.params
+
+    userModel.findById({ _id: userid })
+        .then((user) => res.json(user.Name))
+        .catch(er => console.log(er))
 }
 
 

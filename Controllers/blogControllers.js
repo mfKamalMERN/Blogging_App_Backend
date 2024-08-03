@@ -5,7 +5,16 @@ const userModel = require("../Models/usermodel.js")
 
 exports.getAllBlogs = (req, res) => {
     blogModel.find()
-        .then((blogs) => res.json({ AllBlogs: blogs }))
+        .then(async (blogs) => {
+            try {
+                const luser = await userModel.findById({ _id: req.user._id })
+
+                res.json({ AllBlogs: blogs, Token: req.cookies.token, LoggedUser: luser })
+
+            } catch (error) {
+                console.log(error);
+            }
+        })
         .catch(er => console.log(er))
 }
 
@@ -73,7 +82,7 @@ exports.LikeUnlikeBlog = async (req, res) => {
 
 exports.AddComment = async (req, res) => {
     const blogid = req.params.blogid
-    const { comment } = req.body
+    const comment = req.body.newComment
 
     try {
 
@@ -117,7 +126,7 @@ exports.DeleteComment = (req, res) => {
 
                 await targetblog.save()
 
-                res.json({ Status: `Comment removed`, Index: index })
+                res.json({ Status: `Comment removed`, Index: index, Comments: targetblog.Comments })
             }
             // else res.json(`Invalid Request`)
         })
@@ -130,7 +139,7 @@ exports.DeleteComment = (req, res) => {
 
 exports.EditComment = async (req, res) => {
     const { blogid, commentid } = req.params
-    const newcomment = req.body.newcomment
+    const newcomment = req.body.eComment
 
     try {
 
@@ -141,7 +150,7 @@ exports.EditComment = async (req, res) => {
         // else {
         targetcomment.Comment = newcomment
         await targetblog.save()
-        res.json({ Status: `Comment edited`, UpdatedComment: targetcomment.Comment })
+        res.json({ Status: `Comment edited`, Comments: targetblog.Comments })
         // }
     } catch (error) {
         console.log(error);
@@ -151,7 +160,7 @@ exports.EditComment = async (req, res) => {
 
 exports.EditBlogText = async (req, res) => {
     const blogid = req.params.blogid
-    const newblog = req.body.updatedblog
+    const newblog = req.body.blogContent
 
     const errorV = validationResult(req)
 
