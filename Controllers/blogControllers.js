@@ -18,7 +18,6 @@ exports.getAllBlogs = (req, res) => {
         .catch(er => console.log(er))
 }
 
-
 exports.CreateBlog = (req, res) => {
 
     const { blogstring } = req.body
@@ -101,7 +100,7 @@ exports.AddComment = async (req, res) => {
         })
 
         pr.then((result) => {
-            res.json({ result, Comment: targetblog.Comments.find((cmnt) => cmnt.Comment === comment) })
+            res.json({ result, Comments: targetblog.Comments })
         }).catch(er => res.json(er))
 
     } catch (error) {
@@ -180,4 +179,12 @@ exports.EditBlogText = async (req, res) => {
             console.log(error);
         }
     }
+}
+
+exports.DeleteBlog = (req, res) => {
+    const { blogid } = req.params
+
+    blogModel.findByIdAndDelete({ _id: blogid })
+        .then(res.json(`blog deleted`))
+        .catch(er => console.log(er))
 }
