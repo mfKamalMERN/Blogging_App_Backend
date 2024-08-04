@@ -204,8 +204,26 @@ exports.getOwnerName = (req, res) => {
     const { userid } = req.params
 
     userModel.findById({ _id: userid })
-        .then((user) => res.json(user.Name))
+        .then((user) => res.json(user?.Name))
         .catch(er => console.log(er))
+}
+
+exports.getCommentererName = (req, res) => {
+    const { userid } = req.params
+
+    userModel.findById({ _id: userid })
+        .then((user) => res.json(user?.Name))
+        .catch(er => console.log(er))
+}
+
+exports.GetUsers = async (req, res) => {
+    try {
+        const users = await userModel.find({})
+        res.json(users)
+
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 
