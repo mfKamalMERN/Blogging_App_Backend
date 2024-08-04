@@ -62,14 +62,14 @@ exports.LikeUnlikeBlog = async (req, res) => {
 
             await targetblog.save()
 
-            res.json("Unliked")
+            res.json({ Status: "Unliked", Likes: targetblog.Likes })
 
         }
 
         else {
             targetblog.Likes.push(req.user._id)
             await targetblog.save()
-            res.json("Liked")
+            res.json({ Status: "Liked", Likes: targetblog.Likes })
         }
 
 
@@ -86,22 +86,12 @@ exports.AddComment = async (req, res) => {
     try {
 
         const targetblog = await blogModel.findById({ _id: blogid })
+
         targetblog.Comments.push({ Comment: comment, CommentedBy: req.user._id })
 
         await targetblog.save()
-        const a = 10
 
-
-        const pr = new Promise((res, rej) => {
-            if (a >= 6) res("Comment Added")
-
-            else rej("Error: Can't add comment")
-
-        })
-
-        pr.then((result) => {
-            res.json({ result, Comments: targetblog.Comments })
-        }).catch(er => res.json(er))
+        res.json({ Comments: targetblog.Comments })
 
     } catch (error) {
         console.log(error);
