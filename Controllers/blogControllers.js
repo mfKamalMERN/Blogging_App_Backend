@@ -62,14 +62,14 @@ exports.LikeUnlikeBlog = async (req, res) => {
 
             await targetblog.save()
 
-            res.json("Unliked")
+            res.json({ Status: "Unliked", Likes: targetblog.Likes })
 
         }
 
         else {
             targetblog.Likes.push(req.user._id)
             await targetblog.save()
-            res.json("Liked")
+            res.json({ Status: "Liked", Likes: targetblog.Likes })
         }
 
 
