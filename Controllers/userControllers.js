@@ -5,12 +5,12 @@ const jwt = require('jsonwebtoken')
 
 exports.SignUp = async (req, res) => {
 
-    const { name, email, password } = req.body
+    const { name, email, password, contact } = req.body
 
     const errorV = validationResult(req)
 
     if (!errorV.isEmpty()) {
-        res.json({ Msg: "Validation Error", actError: errorV.array() })
+        res.json({ ValidationError: true, actError: errorV.array() })
     }
 
     else {
@@ -18,13 +18,13 @@ exports.SignUp = async (req, res) => {
             const founduser = await userModel.findOne({ Email: email })
 
             if (founduser) {
-                res.json(`User with ${email} is already registered.`)
+                res.json({ AlreadyRegistered: true, Msg: `User with ${email} is already registered.` })
             }
 
             else {
 
                 try {
-                    await userModel.create({ Name: name, Email: email, Password: password })
+                    await userModel.create({ Name: name, Email: email, Password: password, Contact: contact })
 
                     res.json(`Hi ${name}! Welcome to blogging app, Please proceed to login!`)
 
@@ -51,7 +51,7 @@ exports.Login = (req, res) => {
     const errorV = validationResult(req)
 
     if (!errorV.isEmpty()) {
-        res.json({ Msg: "Validation Error", actError: errorV.array() })
+        res.json({ ValidationError: true, actError: errorV.array() })
     }
 
     else {
@@ -65,7 +65,7 @@ exports.Login = (req, res) => {
 
                         res.cookie('token', token)
 
-                        res.json({ Msg: `Welcome ${user.Name}! `, Token: token })
+                        res.json({ LoggedIn: true, Msg: `Welcome ${user.Name}! `, Token: token, LoggedUser: user })
 
                     }
                     else res.json(`Incorrect Password`)
@@ -190,6 +190,40 @@ exports.UpdateName = (req, res) => {
 
     }
 
+}
+
+exports.getUserDp = (req, res) => {
+    const { userid } = req.params
+
+    userModel.findById({ _id: userid })
+        .then((user) => res.json(user.DP))
+        .catch(er => console.log(er))
+}
+
+exports.getOwnerName = (req, res) => {
+    const { userid } = req.params
+
+    userModel.findById({ _id: userid })
+        .then((user) => res.json(user?.Name))
+        .catch(er => console.log(er))
+}
+
+exports.getCommentererName = (req, res) => {
+    const { userid } = req.params
+
+    userModel.findById({ _id: userid })
+        .then((user) => res.json(user?.Name))
+        .catch(er => console.log(er))
+}
+
+exports.GetUsers = async (req, res) => {
+    try {
+        const users = await userModel.find({})
+        res.json(users)
+
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 
