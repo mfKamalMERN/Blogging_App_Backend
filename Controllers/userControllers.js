@@ -226,5 +226,41 @@ exports.GetUsers = async (req, res) => {
     }
 }
 
+exports.GetFollowers = (req, res) => {
+    const userid = req.params.userid
+
+    userModel.findById({ _id: userid })
+        .then((targetuser) => {
+
+            const followerids = targetuser.Followers
+            const Followers = []
+
+            for (let id of followerids) {
+                userModel.findById({ _id: id })
+                    .then(user => {
+                        Followers.push(user)
+                        res.json({ Followers, Token: req.cookies.token })
+
+                    })
+                    .catch(er => console.log(er))
+            }
+
+
+            // userModel.find({})
+            //     .then(allusers => {
+            //         for (let user of allusers) {
+            //             for (let id of followerids) {
+            //                 if (user._id === id) {
+            //                     Followers.push(user)
+            //                 }
+            //             }
+            //         }
+            //     })
+            //     res.json({ Followers, Token: req.cookies.token })
+        })
+        .catch(er => console.log(er))
+
+}
+
 
 
