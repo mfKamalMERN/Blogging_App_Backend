@@ -262,5 +262,19 @@ exports.GetFollowers = (req, res) => {
 
 }
 
+exports.CheckFollowingStatus = async (req, res) => {
+    const { userid } = req.params
 
+    try {
+        const user = await userModel.findById({ _id: userid })
+
+        if (user.Followers.includes(req.user._id)) res.json({ isFollowing: true })
+            
+        else res.json({ isFollowing: false })
+
+    } catch (error) {
+        console.log(error);
+    }
+
+}
 
