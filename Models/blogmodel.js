@@ -3,6 +3,8 @@ const mongoose = require('mongoose')
 const blogschema = new mongoose.Schema({
     Blog: { type: String, required: true },
 
+    Title: { type: String, required: false },
+
     Owner: { type: mongoose.Schema.Types.ObjectId, ref: 'userModel' },
 
     Likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'userModel' }],
