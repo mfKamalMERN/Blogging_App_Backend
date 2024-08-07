@@ -20,14 +20,14 @@ exports.getAllBlogs = (req, res) => {
 
 exports.CreateBlog = (req, res) => {
 
-    const { blogstring } = req.body
+    const { blogstring, title } = req.body
 
     const errorV = validationResult(req)
 
     if (!errorV.isEmpty()) res.json({ ValidationError: true, ActError: errorV.array() })
 
     else {
-        blogModel.create({ Blog: blogstring, Owner: req.user._id })
+        blogModel.create({ Blog: blogstring, Owner: req.user._id, Title: title })
             .then(async (createdBlog) => {
 
                 try {
@@ -150,6 +150,7 @@ exports.EditComment = async (req, res) => {
 exports.EditBlogText = async (req, res) => {
     const blogid = req.params.blogid
     const newblog = req.body.blogContent
+    const newtitle = req.body.title
 
     const errorV = validationResult(req)
 
@@ -160,10 +161,11 @@ exports.EditBlogText = async (req, res) => {
             const tblog = await blogModel.findById({ _id: blogid })
 
             tblog.Blog = newblog
+            tblog.Title = newtitle
 
             await tblog.save()
 
-            res.json({ Status: `Blog Updated`, NewBlog: tblog.Blog })
+            res.json({ Status: `Blog Updated`, NewBlog: tblog.Blog, NewTitle: newtitle })
 
         } catch (error) {
             console.log(error);
