@@ -226,5 +226,80 @@ exports.GetUsers = async (req, res) => {
     }
 }
 
+exports.GetFollowers = (req, res) => {
+    const userid = req.params.userid
 
+    userModel.findById({ _id: userid })
+        .then((targetuser) => {
+
+            const followerids = targetuser.Followers
+            const Followers = []
+
+            for (let id of followerids) {
+                userModel.findById({ _id: id })
+                    .then(user => {
+                        Followers.push(user)
+                        res.json({ Followers, Token: req.cookies.token })
+
+                    })
+                    .catch(er => console.log(er))
+            }
+
+
+            // userModel.find({})
+            //     .then(allusers => {
+            //         for (let user of allusers) {
+            //             for (let id of followerids) {
+            //                 if (user._id === id) {
+            //                     Followers.push(user)
+            //                 }
+            //             }
+            //         }
+            //     })
+            //     res.json({ Followers, Token: req.cookies.token })
+        })
+        .catch(er => console.log(er))
+
+}
+
+exports.CheckFollowingStatus = async (req, res) => {
+    const { userid } = req.params
+
+    try {
+        const user = await userModel.findById({ _id: userid })
+
+        if (user.Followers.includes(req.user._id)) res.json({ isFollowing: true })
+
+        else res.json({ isFollowing: false })
+
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+exports.GetFollowings = (req, res) => {
+    const { userid } = req.params
+
+    userModel.findById({ _id: userid })
+        .then((targetuser) => {
+
+            const followingids = targetuser.Followings
+
+            const Followings = []
+
+            for (let id of followingids) {
+                userModel.findById({ _id: id })
+                    .then(user => {
+                        Followings.push(user)
+
+                        res.json({ Followings, Token: req.cookies.token })
+                    })
+                    .catch(er => console.log(er))
+            }
+
+
+        })
+        .catch(er => console.log(er))
+}
 
