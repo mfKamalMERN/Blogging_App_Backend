@@ -269,12 +269,37 @@ exports.CheckFollowingStatus = async (req, res) => {
         const user = await userModel.findById({ _id: userid })
 
         if (user.Followers.includes(req.user._id)) res.json({ isFollowing: true })
-            
+
         else res.json({ isFollowing: false })
 
     } catch (error) {
         console.log(error);
     }
 
+}
+
+exports.GetFollowings = (req, res) => {
+    const { userid } = req.params
+
+    userModel.findById({ _id: userid })
+        .then((targetuser) => {
+
+            const followingids = targetuser.Followings
+
+            const Followings = []
+
+            for (let id of followingids) {
+                userModel.findById({ _id: id })
+                    .then(user => {
+                        Followings.push(user)
+
+                        res.json({ Followings, Token: req.cookies.token })
+                    })
+                    .catch(er => console.log(er))
+            }
+
+
+        })
+        .catch(er => console.log(er))
 }
 
