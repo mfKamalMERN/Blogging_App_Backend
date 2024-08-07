@@ -20,14 +20,14 @@ exports.getAllBlogs = (req, res) => {
 
 exports.CreateBlog = (req, res) => {
 
-    const { blogstring } = req.body
+    const { blogstring, title } = req.body
 
     const errorV = validationResult(req)
 
     if (!errorV.isEmpty()) res.json({ ValidationError: true, ActError: errorV.array() })
 
     else {
-        blogModel.create({ Blog: blogstring, Owner: req.user._id })
+        blogModel.create({ Blog: blogstring, Owner: req.user._id, Title: title })
             .then(async (createdBlog) => {
 
                 try {
