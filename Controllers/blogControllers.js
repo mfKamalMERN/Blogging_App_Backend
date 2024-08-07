@@ -1,18 +1,33 @@
 const { validationResult } = require("express-validator")
-const blogModel = require("../Models/blogmodel")
-const userModel = require("../Models/usermodel")
+const blogModel = require("../Models/blogmodel.js")
+const userModel = require("../Models/usermodel.js")
 
+
+exports.getAllBlogs = (req, res) => {
+    blogModel.find()
+        .then(async (blogs) => {
+            try {
+                const luser = await userModel.findById({ _id: req.user._id })
+
+                res.json({ AllBlogs: blogs, Token: req.cookies.token, LoggedUser: luser })
+
+            } catch (error) {
+                console.log(error);
+            }
+        })
+        .catch(er => console.log(er))
+}
 
 exports.CreateBlog = (req, res) => {
 
-    const { blogstring } = req.body
+    const { blogstring, title } = req.body
 
     const errorV = validationResult(req)
 
     if (!errorV.isEmpty()) res.json({ ValidationError: true, ActError: errorV.array() })
 
     else {
-        blogModel.create({ Blog: blogstring, Owner: req.user._id })
+        blogModel.create({ Blog: blogstring, Owner: req.user._id, Title: title })
             .then(async (createdBlog) => {
 
                 try {
@@ -47,14 +62,14 @@ exports.LikeUnlikeBlog = async (req, res) => {
 
             await targetblog.save()
 
-            res.json("Unliked")
+            res.json({ Status: "Unliked", Likes: targetblog.Likes })
 
         }
 
         else {
             targetblog.Likes.push(req.user._id)
             await targetblog.save()
-            res.json("Liked")
+            res.json({ Status: "Liked", Likes: targetblog.Likes })
         }
 
 
@@ -66,27 +81,17 @@ exports.LikeUnlikeBlog = async (req, res) => {
 
 exports.AddComment = async (req, res) => {
     const blogid = req.params.blogid
-    const { comment } = req.body
+    const comment = req.body.newComment
 
     try {
 
         const targetblog = await blogModel.findById({ _id: blogid })
+
         targetblog.Comments.push({ Comment: comment, CommentedBy: req.user._id })
 
         await targetblog.save()
-        const a = 10
 
-
-        const pr = new Promise((res, rej) => {
-            if (a >= 6) res("Comment Added")
-
-            else rej("Error: Can't add comment")
-
-        })
-
-        pr.then((result) => {
-            res.json({ result, Comment: targetblog.Comments.find((cmnt) => cmnt.Comment === comment) })
-        }).catch(er => res.json(er))
+        res.json({ Comments: targetblog.Comments })
 
     } catch (error) {
         console.log(error);
@@ -110,7 +115,7 @@ exports.DeleteComment = (req, res) => {
 
                 await targetblog.save()
 
-                res.json({ Status: `Comment removed`, Index: index })
+                res.json({ Status: `Comment removed`, Index: index, Comments: targetblog.Comments })
             }
             // else res.json(`Invalid Request`)
         })
@@ -123,7 +128,7 @@ exports.DeleteComment = (req, res) => {
 
 exports.EditComment = async (req, res) => {
     const { blogid, commentid } = req.params
-    const newcomment = req.body.newcomment
+    const newcomment = req.body.eComment
 
     try {
 
@@ -134,7 +139,7 @@ exports.EditComment = async (req, res) => {
         // else {
         targetcomment.Comment = newcomment
         await targetblog.save()
-        res.json({ Status: `Comment edited`, UpdatedComment: targetcomment.Comment })
+        res.json({ Status: `Comment edited`, Comments: targetblog.Comments })
         // }
     } catch (error) {
         console.log(error);
@@ -144,7 +149,8 @@ exports.EditComment = async (req, res) => {
 
 exports.EditBlogText = async (req, res) => {
     const blogid = req.params.blogid
-    const newblog = req.body.updatedblog
+    const newblog = req.body.blogContent
+    const newtitle = req.body.title
 
     const errorV = validationResult(req)
 
@@ -155,13 +161,22 @@ exports.EditBlogText = async (req, res) => {
             const tblog = await blogModel.findById({ _id: blogid })
 
             tblog.Blog = newblog
+            tblog.Title = newtitle
 
             await tblog.save()
 
-            res.json({ Status: `Blog Updated`, NewBlog: tblog.Blog })
+            res.json({ Status: `Blog Updated`, NewBlog: tblog.Blog, NewTitle: newtitle })
 
         } catch (error) {
             console.log(error);
         }
     }
+}
+
+exports.DeleteBlog = (req, res) => {
+    const { blogid } = req.params
+
+    blogModel.findByIdAndDelete({ _id: blogid })
+        .then(res.json(`blog deleted`))
+        .catch(er => console.log(er))
 }
