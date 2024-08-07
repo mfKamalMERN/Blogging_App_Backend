@@ -181,10 +181,15 @@ exports.UpdateName = (req, res) => {
     if (!errorV.isEmpty()) res.json({ ValidationError: true, ActError: errorV.array() })
 
     else {
-        userModel.findByIdAndUpdate({ _id: req.user._id }, { Name: newName })
-            .then((user) => {
-                if (user.Name === newName) res.json(`${newName} is already existing`)
-                else res.json(`Name updated from ${user.Name} to ${newName}`)
+        userModel.findById({ _id: req.user._id })
+            .then(async (user) => {
+                if (user.Name === newName) res.json({ Msg: `${newName} is already existing`, UpdatedUser: user })
+                else {
+                    const oldName = user.Name
+                    user.Name = newName
+                    await user.save()
+                    res.json({ Msg: `Name updated from ${oldName} to ${user.Name}`, UpdatedUser: user })
+                }
             })
             .catch(er => console.log(er))
 
