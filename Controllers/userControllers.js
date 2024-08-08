@@ -201,7 +201,7 @@ exports.getUserDp = (req, res) => {
     const { userid } = req.params
 
     userModel.findById({ _id: userid })
-        .then((user) => res.json(user.DP))
+        .then((user) => res.json(user?.DP))
         .catch(er => console.log(er))
 }
 
