@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const userModel = require("../Models/usermodel.js");
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const blogModel = require("../Models/blogmodel.js");
 
 
 exports.SignUp = async (req, res) => {
@@ -306,5 +307,27 @@ exports.GetFollowings = (req, res) => {
 
         })
         .catch(er => console.log(er))
+}
+
+
+exports.LikesUsers = async (req, res) => {
+    const { blogid } = req.params
+
+    try {
+        const targetblog = await blogModel.findById({ _id: blogid })
+
+        const targetBlogLikes = targetblog.Likes
+
+        const likedUsers = []
+
+        for (let usrid of targetBlogLikes) {
+            likedUsers.push(await userModel.findById({ _id: usrid }))
+        }
+
+        res.json({ LikedUsers: likedUsers, Token: req.cookies.token })
+
+    } catch (error) {
+        console.log(error);
+    }
 }
 
