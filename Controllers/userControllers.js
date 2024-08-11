@@ -140,7 +140,9 @@ exports.UploadProfilePic = async (req, res) => {
 
     try {
         const loggeduser = await userModel.findById({ _id: req.user._id })
+
         loggeduser.DP = `http://localhost:7500/Images/${file.filename}`
+
         await loggeduser.save()
 
         res.json(`Profile Pic updated for ${loggeduser.Name}`)
@@ -333,9 +335,9 @@ exports.LikesUsers = async (req, res) => {
 
             const likeduser = await userModel.findById({ _id: usrid })
 
-            const { Name, DP } = likeduser
+            const { _id, Name, DP } = likeduser
 
-            likedUsers.push({ Name, DP })
+            likedUsers.push({ _id, Name, DP })
         }
 
         res.json({ LikedUsers: likedUsers, Token: req.cookies.token })
