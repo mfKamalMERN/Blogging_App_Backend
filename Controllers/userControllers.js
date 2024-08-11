@@ -225,7 +225,16 @@ exports.getCommentererName = (req, res) => {
 exports.GetUsers = async (req, res) => {
     try {
         const users = await userModel.find({})
-        res.json(users)
+
+        const Users = []
+
+        for (let user of users) {
+            const { _id, Name, Followings, Followers } = user
+
+            Users.push({ _id, Name, Followings, Followers })
+        }
+
+        res.json(Users)
 
     } catch (error) {
         console.log(error);
@@ -325,7 +334,7 @@ exports.LikesUsers = async (req, res) => {
             const likeduser = await userModel.findById({ _id: usrid })
 
             const { Name, DP } = likeduser
-            
+
             likedUsers.push({ Name, DP })
         }
 
