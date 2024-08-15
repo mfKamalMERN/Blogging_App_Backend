@@ -261,22 +261,8 @@ exports.GetFollowers = (req, res) => {
                     })
                     .catch(er => console.log(er))
             }
-
-
-            // userModel.find({})
-            //     .then(allusers => {
-            //         for (let user of allusers) {
-            //             for (let id of followerids) {
-            //                 if (user._id === id) {
-            //                     Followers.push(user)
-            //                 }
-            //             }
-            //         }
-            //     })
-            //     res.json({ Followers, Token: req.cookies.token })
         })
         .catch(er => console.log(er))
-
 }
 
 exports.CheckFollowingStatus = async (req, res) => {
@@ -345,5 +331,19 @@ exports.LikesUsers = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
+}
+
+exports.Find_New_People = async (req, res) => {
+    const luser = req.user._id
+
+    try {
+        const allusers = await userModel.find({})
+
+        res.json({ allusers, luser })
+
+    } catch (error) {
+        console.log(error);
+    }
+
 }
 
