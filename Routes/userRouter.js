@@ -1,5 +1,5 @@
 const express = require('express')
-const { SignUp, Login, FollowUnfollow, Logout, MyProfile, UploadProfilePic, UpdatePassword, UpdateName, getUserDp, getOwnerName, getCommentererName, GetUsers, GetFollowers, CheckFollowingStatus, GetFollowings } = require('../Controllers/userControllers.js')
+const { SignUp, Login, FollowUnfollow, Logout, MyProfile, UploadProfilePic, UpdatePassword, UpdateName, getUserDp, getOwnerName, getCommentererName, GetUsers, GetFollowers, CheckFollowingStatus, GetFollowings, LikesUsers, Find_New_People } = require('../Controllers/userControllers.js')
 const { signUpValidation, loginValidation, updatePasswordValidation, updateNameValidation } = require('../Validations/userValidations.js')
 const VerifyToken = require('../VerifyToken/VerifyToken.js')
 const { upload } = require('../Multer/Multer.js')
@@ -39,6 +39,10 @@ userRouter.get('/getfollowers/:userid', VerifyToken, GetFollowers)
 userRouter.get('/getfollowings/:userid', VerifyToken, GetFollowings)
 
 userRouter.get('/checkfollowingstatus/:userid', VerifyToken, CheckFollowingStatus)
+
+userRouter.get('/likesusers/:blogid', VerifyToken, LikesUsers)
+
+userRouter.get('/findnewpeople', VerifyToken, Find_New_People)
 
 
 

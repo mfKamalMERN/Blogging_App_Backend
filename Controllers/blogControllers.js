@@ -180,3 +180,16 @@ exports.DeleteBlog = (req, res) => {
         .then(res.json(`blog deleted`))
         .catch(er => console.log(er))
 }
+
+exports.GetBlog = async (req, res) => {
+    const { blogid } = req.params
+
+    try {
+        const targetblog = await blogModel.findById({ _id: blogid })
+
+        res.json(targetblog)
+
+    } catch (error) {
+        console.log(error);
+    }
+}

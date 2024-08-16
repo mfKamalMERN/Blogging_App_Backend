@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const userModel = require("../Models/usermodel.js");
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const blogModel = require("../Models/blogmodel.js");
 
 
 exports.SignUp = async (req, res) => {
@@ -139,7 +140,9 @@ exports.UploadProfilePic = async (req, res) => {
 
     try {
         const loggeduser = await userModel.findById({ _id: req.user._id })
+
         loggeduser.DP = `http://localhost:7500/Images/${file.filename}`
+
         await loggeduser.save()
 
         res.json(`Profile Pic updated for ${loggeduser.Name}`)
@@ -181,10 +184,15 @@ exports.UpdateName = (req, res) => {
     if (!errorV.isEmpty()) res.json({ ValidationError: true, ActError: errorV.array() })
 
     else {
-        userModel.findByIdAndUpdate({ _id: req.user._id }, { Name: newName })
-            .then((user) => {
-                if (user.Name === newName) res.json(`${newName} is already existing`)
-                else res.json(`Name updated from ${user.Name} to ${newName}`)
+        userModel.findById({ _id: req.user._id })
+            .then(async (user) => {
+                if (user.Name === newName) res.json({ Msg: `${newName} is already existing`, UpdatedUser: user })
+                else {
+                    const oldName = user.Name
+                    user.Name = newName
+                    await user.save()
+                    res.json({ Msg: `Name updated from ${oldName} to ${user.Name}`, UpdatedUser: user })
+                }
             })
             .catch(er => console.log(er))
 
@@ -196,7 +204,7 @@ exports.getUserDp = (req, res) => {
     const { userid } = req.params
 
     userModel.findById({ _id: userid })
-        .then((user) => res.json(user.DP))
+        .then((user) => res.json(user?.DP))
         .catch(er => console.log(er))
 }
 
@@ -219,7 +227,16 @@ exports.getCommentererName = (req, res) => {
 exports.GetUsers = async (req, res) => {
     try {
         const users = await userModel.find({})
-        res.json(users)
+
+        const Users = []
+
+        for (let user of users) {
+            const { _id, Name, Followings, Followers } = user
+
+            Users.push({ _id, Name, Followings, Followers })
+        }
+
+        res.json(Users)
 
     } catch (error) {
         console.log(error);
@@ -244,22 +261,8 @@ exports.GetFollowers = (req, res) => {
                     })
                     .catch(er => console.log(er))
             }
-
-
-            // userModel.find({})
-            //     .then(allusers => {
-            //         for (let user of allusers) {
-            //             for (let id of followerids) {
-            //                 if (user._id === id) {
-            //                     Followers.push(user)
-            //                 }
-            //             }
-            //         }
-            //     })
-            //     res.json({ Followers, Token: req.cookies.token })
         })
         .catch(er => console.log(er))
-
 }
 
 exports.CheckFollowingStatus = async (req, res) => {
@@ -280,26 +283,77 @@ exports.CheckFollowingStatus = async (req, res) => {
 
 exports.GetFollowings = (req, res) => {
     const { userid } = req.params
+    const Followings = []
 
     userModel.findById({ _id: userid })
-        .then((targetuser) => {
+        .then(async (targetuser) => {
 
             const followingids = targetuser.Followings
 
-            const Followings = []
 
             for (let id of followingids) {
-                userModel.findById({ _id: id })
-                    .then(user => {
-                        Followings.push(user)
+                try {
+                    const user = await userModel.findById({ _id: id })
+                    const { _id, Name, DP, Followers } = user
+                    Followings.push({ _id, Name, DP, Followers })
 
-                        res.json({ Followings, Token: req.cookies.token })
-                    })
-                    .catch(er => console.log(er))
+                } catch (error) {
+                    console.log(error);
+
+                }
             }
-
+            res.json({ Followings, Token: req.cookies.token })
 
         })
         .catch(er => console.log(er))
+}
+
+
+exports.LikesUsers = async (req, res) => {
+    const { blogid } = req.params
+
+    try {
+        const targetblog = await blogModel.findById({ _id: blogid })
+
+        const targetBlogLikes = targetblog.Likes
+
+        const likedUsers = []
+
+        for (let usrid of targetBlogLikes) {
+
+            const likeduser = await userModel.findById({ _id: usrid })
+
+            const { _id, Name, DP } = likeduser
+
+            likedUsers.push({ _id, Name, DP })
+        }
+
+        res.json({ LikedUsers: likedUsers, Token: req.cookies.token })
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.Find_New_People = async (req, res) => {
+
+    try {
+        const allusers = await userModel.find({})
+
+        const OtherUsers = []
+
+        for (let user of allusers) {
+
+            const { _id, Name, DP, Followers } = user
+            OtherUsers.push({ _id, Name, DP, Followers })
+
+        }
+
+        res.json({ OtherUsers, Token: req.cookies.token })
+
+    } catch (error) {
+        console.log(error);
+    }
+
 }
 
