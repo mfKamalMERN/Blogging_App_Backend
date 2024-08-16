@@ -283,24 +283,26 @@ exports.CheckFollowingStatus = async (req, res) => {
 
 exports.GetFollowings = (req, res) => {
     const { userid } = req.params
+    const Followings = []
 
     userModel.findById({ _id: userid })
-        .then((targetuser) => {
+        .then(async (targetuser) => {
 
             const followingids = targetuser.Followings
 
-            const Followings = []
 
             for (let id of followingids) {
-                userModel.findById({ _id: id })
-                    .then(user => {
-                        Followings.push(user)
+                try {
+                    const user = await userModel.findById({ _id: id })
+                    const { _id, Name, DP, Followers } = user
+                    Followings.push({ _id, Name, DP, Followers })
 
-                        res.json({ Followings, Token: req.cookies.token })
-                    })
-                    .catch(er => console.log(er))
+                } catch (error) {
+                    console.log(error);
+
+                }
             }
-
+            res.json({ Followings, Token: req.cookies.token })
 
         })
         .catch(er => console.log(er))
@@ -334,12 +336,20 @@ exports.LikesUsers = async (req, res) => {
 }
 
 exports.Find_New_People = async (req, res) => {
-    const luser = req.user._id
 
     try {
         const allusers = await userModel.find({})
 
-        res.json({ allusers, luser })
+        const OtherUsers = []
+
+        for (let user of allusers) {
+
+            const { _id, Name, DP, Followers } = user
+            OtherUsers.push({ _id, Name, DP, Followers })
+
+        }
+
+        res.json({ OtherUsers, Token: req.cookies.token })
 
     } catch (error) {
         console.log(error);
