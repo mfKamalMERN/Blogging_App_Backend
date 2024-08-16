@@ -200,12 +200,19 @@ exports.UpdateName = (req, res) => {
 
 }
 
-exports.getUserDp = (req, res) => {
+exports.getUserDp = async (req, res) => {
     const { userid } = req.params
 
-    userModel.findById({ _id: userid })
-        .then((user) => res.json(user?.DP))
-        .catch(er => console.log(er))
+    try {
+        const user = await userModel.findById({ _id: userid })
+        res.json(user?.DP)
+
+    } catch (error) {
+        console.log(error);
+
+    }
+    // .then((user) => res.json(user.DP))
+    // .catch(er => console.log(er))
 }
 
 exports.getOwnerName = (req, res) => {
@@ -323,9 +330,9 @@ exports.LikesUsers = async (req, res) => {
 
             const likeduser = await userModel.findById({ _id: usrid })
 
-            const { _id, Name, DP } = likeduser
+            const { _id, Name, DP, Followers } = likeduser
 
-            likedUsers.push({ _id, Name, DP })
+            likedUsers.push({ _id, Name, DP, Followers })
         }
 
         res.json({ LikedUsers: likedUsers, Token: req.cookies.token })
