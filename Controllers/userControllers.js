@@ -294,8 +294,8 @@ exports.GetFollowings = (req, res) => {
             for (let id of followingids) {
                 try {
                     const user = await userModel.findById({ _id: id })
-                    const { _id, Name, DP } = user
-                    Followings.push({ _id, Name, DP })
+                    const { _id, Name, DP, Followers } = user
+                    Followings.push({ _id, Name, DP, Followers })
 
                 } catch (error) {
                     console.log(error);
@@ -303,7 +303,7 @@ exports.GetFollowings = (req, res) => {
                 }
             }
             res.json({ Followings, Token: req.cookies.token })
-            
+
         })
         .catch(er => console.log(er))
 }
