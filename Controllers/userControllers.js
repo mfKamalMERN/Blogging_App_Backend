@@ -369,3 +369,10 @@ exports.Find_New_People = async (req, res) => {
 
 }
 
+
+exports.DeleteMyAccount = (req, res) => {
+
+    userModel.findByIdAndDelete({ _id: req.user._id })
+        .then(user => res.clearCookie('token').json(`Account for ${user?.Name} is deleted`))
+        .catch(er => console.log(er))
+}
