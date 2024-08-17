@@ -373,6 +373,30 @@ exports.Find_New_People = async (req, res) => {
 exports.DeleteMyAccount = (req, res) => {
 
     userModel.findByIdAndDelete({ _id: req.user._id })
-        .then(user => res.clearCookie('token').json(`Account for ${user?.Name} is deleted`))
+        .then(async user => {
+
+            const followingids = user.Followings
+
+            for (let id of followingids) {
+                try {
+                    const usr = await userModel.findById({ _id: id })
+
+                    const index = usr.Followers.indexOf(user._id)
+
+                    usr.Followers.splice(index, 1)
+
+                    await usr.save()
+
+                } catch (error) {
+                    console.log(error);
+
+                }
+
+            }
+
+            await blogModel.findOneAndDelete({ Owner: user._id })
+
+            res.clearCookie('token').json(`Account for ${user?.Name} is deleted`)
+        })
         .catch(er => console.log(er))
 }
