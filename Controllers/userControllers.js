@@ -251,23 +251,28 @@ exports.GetUsers = async (req, res) => {
 }
 
 exports.GetFollowers = (req, res) => {
-    const userid = req.params.userid
+    const { userid } = req.params
+    const Followwers = []
 
     userModel.findById({ _id: userid })
-        .then((targetuser) => {
+        .then(async (targetuser) => {
 
             const followerids = targetuser.Followers
-            const Followers = []
 
             for (let id of followerids) {
-                userModel.findById({ _id: id })
-                    .then(user => {
-                        Followers.push(user)
-                        res.json({ Followers, Token: req.cookies.token })
+                try {
 
-                    })
-                    .catch(er => console.log(er))
+                    const user = await userModel.findById({ _id: id })
+
+                    const { _id, Name, DP, Followers } = user
+
+                    Followwers.push({ _id, Name, DP, Followers })
+
+                } catch (error) {
+                    console.log(error);
+                }
             }
+            res.json({ Followwers, Token: req.cookies.token })
         })
         .catch(er => console.log(er))
 }
