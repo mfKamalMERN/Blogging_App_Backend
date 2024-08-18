@@ -141,7 +141,7 @@ exports.UploadProfilePic = async (req, res) => {
     try {
         const loggeduser = await userModel.findById({ _id: req.user._id })
 
-        loggeduser.DP = `http://localhost:7500/Images/${file.filename}`
+        loggeduser.DP = `https://blogging-app-backend-dpk0.onrender.com/Images/${file.filename}`
 
         await loggeduser.save()
 
