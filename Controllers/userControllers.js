@@ -321,7 +321,7 @@ exports.GetFollowings = (req, res) => {
 }
 
 
-exports.LikesUsers = async (req, res) => {
+exports.GetBlogLikesUsers = async (req, res) => {
     const { blogid } = req.params
 
     try {
