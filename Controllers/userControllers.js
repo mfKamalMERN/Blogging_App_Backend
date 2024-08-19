@@ -238,9 +238,9 @@ exports.GetUsers = async (req, res) => {
         const Users = []
 
         for (let user of users) {
-            const { _id, Name, Followings, Followers } = user
+            const { _id, Name, Followings, Followers, Blogs } = user
 
-            Users.push({ _id, Name, Followings, Followers })
+            Users.push({ _id, Name, Followings, Followers, Blogs })
         }
 
         res.json(Users)
