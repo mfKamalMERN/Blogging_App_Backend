@@ -62,7 +62,7 @@ exports.Login = (req, res) => {
 
                     if (user.Password === password) {
 
-                        const token = jwt.sign({ _id: user._id }, "jwt-secret-key", { expiresIn: "24h" })
+                        const token = jwt.sign({ _id: user._id }, "jwt-secret-key", { expiresIn: "1h" })
 
                         res.cookie('token', token)
 
