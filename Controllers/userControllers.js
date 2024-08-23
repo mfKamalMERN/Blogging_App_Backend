@@ -243,7 +243,7 @@ exports.GetUsers = async (req, res) => {
             Users.push({ _id, Name, Followings, Followers, Blogs })
         }
 
-        res.json({ Users: Users, Token: req.cookies.token })
+        res.json({ Users, Token: req.cookies.token })
 
     } catch (error) {
         console.log(error);
