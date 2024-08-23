@@ -11,17 +11,16 @@ const VerifyToken = (req, res, next) => {
     }
 
     else {
-        jwt.verify(token, "jwt-secret-key", async (err, decoded) => {
+        jwt.verify(token, "jwt-secret-key", (err, decoded) => {
             if (err) res.json(err)
 
             else {
-                try {
-                    req.user = await userModel.findById({ _id: decoded._id })
-                    next()
-
-                } catch (error) {
-                    console.log(error)
-                }
+                userModel.findById({ _id: decoded._id })
+                    .then(user => {
+                        req.user = user
+                        next()
+                    })
+                    .catch(er => console.log(er))
             }
         })
     }
