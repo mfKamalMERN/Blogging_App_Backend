@@ -62,7 +62,7 @@ exports.Login = (req, res) => {
 
                     if (user.Password === password) {
 
-                        const token = jwt.sign({ _id: user._id }, "jwt-secret-key", { expiresIn: "24h" })
+                        const token = jwt.sign({ _id: user._id }, "jwt-secret-key", { expiresIn: "1h" })
 
                         res.cookie('token', token)
 
@@ -243,7 +243,7 @@ exports.GetUsers = async (req, res) => {
             Users.push({ _id, Name, Followings, Followers, Blogs })
         }
 
-        res.json(Users)
+        res.json({ Users: Users, Token: req.cookies.token })
 
     } catch (error) {
         console.log(error);
@@ -321,7 +321,7 @@ exports.GetFollowings = (req, res) => {
 }
 
 
-exports.LikesUsers = async (req, res) => {
+exports.GetBlogLikesUsers = async (req, res) => {
     const { blogid } = req.params
 
     try {
