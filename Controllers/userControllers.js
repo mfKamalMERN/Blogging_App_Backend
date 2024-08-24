@@ -243,7 +243,7 @@ exports.GetUsers = async (req, res) => {
             Users.push({ _id, Name, Followings, Followers, Blogs })
         }
 
-        res.json({ Users: Users, Token: req.cookies.token })
+        res.json(Users)
 
     } catch (error) {
         console.log(error);
@@ -430,6 +430,14 @@ exports.GetUserBlogs = (req, res) => {
         .catch(er => console.log(er))
 }
 
+
+exports.GetUser = (req, res) => {
+    const { userid } = req.params
+
+    userModel.findById({ _id: userid })
+        .then(user => res.json({ User: user, Token: req.cookies.token }))
+        .catch(er => console.log(er))
+}
 
 
 
