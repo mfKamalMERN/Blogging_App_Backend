@@ -431,6 +431,14 @@ exports.GetUserBlogs = (req, res) => {
 }
 
 
+exports.GetUser = (req, res) => {
+    const { userid } = req.params
+
+    userModel.findById({ _id: userid })
+        .then(user => res.json({ User: user, Token: req.cookies.token }))
+        .catch(er => console.log(er))
+}
+
 
 
 
