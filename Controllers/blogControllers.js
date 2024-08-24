@@ -177,7 +177,23 @@ exports.DeleteBlog = (req, res) => {
     const { blogid } = req.params
 
     blogModel.findByIdAndDelete({ _id: blogid })
-        .then(res.json(`blog deleted`))
+        .then(async deletedblog => {
+            try {
+                const targetuser = await userModel.findById({ _id: deletedblog.Owner })
+
+                const index = targetuser?.Blogs?.findIndex((blog) => blog?._id == blogid)
+
+                targetuser.Blogs.splice(index, 1)
+
+                await targetuser.save()
+
+                res.json(`blog deleted`)
+            } catch (error) {
+                console.log(error);
+
+            }
+
+        })
         .catch(er => console.log(er))
 }
 
