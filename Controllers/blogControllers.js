@@ -49,6 +49,31 @@ exports.CreateBlog = (req, res) => {
     }
 }
 
+exports.CreateBlogWithFile = (req, res) => {
+
+    const { blogstring, title } = req.body
+    const file = req.file
+
+    blogModel.create({ Blog: blogstring, Owner: req.user._id, Title: title, Picture: `https://blogging-app-backend-dpk0.onrender.com/Images/${file.filename}` })
+        .then(async (createdBlog) => {
+
+            try {
+
+                const createdBlogOwner = await userModel.findById({ _id: createdBlog.Owner })
+
+                createdBlogOwner.Blogs.push(createdBlog._id)
+
+                await createdBlogOwner.save()
+
+                res.json(`Blog created with file`)
+
+            } catch (error) {
+                console.log(error);
+            }
+        })
+        .catch(er => console.log(er))
+}
+
 exports.LikeUnlikeBlog = async (req, res) => {
     const { blogid } = req.params
 

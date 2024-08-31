@@ -1,6 +1,6 @@
 const express = require("express")
 const VerifyToken = require("../VerifyToken/VerifyToken")
-const { CreateBlog, LikeUnlikeBlog, AddComment, DeleteComment, EditComment, EditBlogText, getAllBlogs, DeleteBlog, GetBlog, UploadBlogPic } = require("../Controllers/blogControllers.js")
+const { CreateBlog, LikeUnlikeBlog, AddComment, DeleteComment, EditComment, EditBlogText, getAllBlogs, DeleteBlog, GetBlog, UploadBlogPic, CreateBlogWithFile } = require("../Controllers/blogControllers.js")
 const { blogTextValidation, updateBlogTextValidation } = require("../Validations/blogValidations.js")
 const { upload } = require("../Multer/Multer.js")
 
@@ -9,6 +9,8 @@ const blogRouter = express.Router()
 blogRouter.get('/getallblogs', VerifyToken, getAllBlogs)
 
 blogRouter.post('/createblog', VerifyToken, blogTextValidation, CreateBlog)
+
+blogRouter.post('/createblogwithfile', VerifyToken, blogTextValidation, CreateBlogWithFile)
 
 blogRouter.patch('/likeunlikeblog/:blogid', VerifyToken, LikeUnlikeBlog)
 
