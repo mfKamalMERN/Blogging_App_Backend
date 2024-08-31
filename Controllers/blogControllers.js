@@ -209,3 +209,33 @@ exports.GetBlog = async (req, res) => {
         console.log(error);
     }
 }
+
+exports.UploadBlogPic = (req, res) => {
+    const file = req.file
+    const { blogid } = req.params
+
+    blogModel.findById({ _id: blogid })
+        .then(async (targetblog) => {
+
+            try {
+                const blogowner = await userModel.findById({ _id: targetblog.Owner })
+
+                const loggeduser = await userModel.findById({ _id: req.user._id })
+
+                if (blogowner.Email === loggeduser.Email) {
+
+                    targetblog.Picture = `http://localhost:7500/Images/${file.filename}`
+
+                    await targetblog.save()
+
+                    res.json({ Msg: "upload successful", url: targetblog.Picture })
+                }
+
+                else res.json({ Msg: 'Invalid request', luser: req.user._id, owner: targetblog.Owner })
+            }
+            catch (error) {
+                console.log(error)
+            }
+        })
+        .catch(er => console.log(er))
+}
