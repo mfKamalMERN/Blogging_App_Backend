@@ -224,14 +224,14 @@ exports.UploadBlogPic = (req, res) => {
 
                 if (blogowner.Email === loggeduser.Email) {
 
-                    targetblog.Picture = `http://localhost:7500/Images/${file.filename}`
+                    targetblog.Picture = `https://blogging-app-backend-dpk0.onrender.com/Images/${file.filename}`
 
                     await targetblog.save()
 
-                    res.json({ Msg: "upload successful", url: targetblog.Picture })
+                    res.json({ Issue: false, Msg: "upload successful", url: targetblog.Picture })
                 }
 
-                else res.json({ Msg: 'Invalid request', luser: req.user._id, owner: targetblog.Owner })
+                else res.json({ Issue: true, Msg: 'Invalid request', luser: req.user._id, owner: targetblog.Owner })
             }
             catch (error) {
                 console.log(error)
