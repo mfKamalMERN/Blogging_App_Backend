@@ -9,8 +9,7 @@ const userschema = new mongoose.Schema({
     DP: { type: String, required: false },
     Blogs: [{ type: mongoose.Schema.Types.ObjectId, ref: "blogModel" }],
     Followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "userModel" }],
-    Followings: [{ type: mongoose.Schema.Types.ObjectId, ref: "userModel" }],
-
+    Followings: [{ type: mongoose.Schema.Types.ObjectId, ref: "userModel" }]
 })
 
 const userModel = mongoose.model('user', userschema)
