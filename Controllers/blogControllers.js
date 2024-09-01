@@ -20,37 +20,6 @@ exports.getAllBlogs = (req, res) => {
 
 exports.CreateBlog = (req, res) => {
     const { blogstring, title } = req.body
-
-    const errorV = validationResult(req)
-
-    if (!errorV.isEmpty()) res.json({ ValidationError: true, ActError: errorV.array() })
-
-    else {
-
-        blogModel.create({ Blog: blogstring, Owner: req.user._id, Title: title })
-            .then(async (createdBlog) => {
-
-                try {
-
-                    const createdBlogOwner = await userModel.findById({ _id: createdBlog.Owner })
-
-                    createdBlogOwner.Blogs.push(createdBlog._id)
-
-                    await createdBlogOwner.save()
-
-                    res.json(`Blog created without file`)
-
-                } catch (error) {
-                    console.log(error);
-                }
-            })
-            .catch(er => console.log(er))
-    }
-}
-
-exports.CreateBlogWithFile = (req, res) => {
-
-    const { blogstring, title } = req.body
     const file = req.file
 
     const errorV = validationResult(req)
@@ -58,25 +27,48 @@ exports.CreateBlogWithFile = (req, res) => {
     if (!errorV.isEmpty()) res.json({ ValidationError: true, ActError: errorV.array() })
 
     else {
+        if (!file) {
 
-        blogModel.create({ Blog: blogstring, Owner: req.user._id, Title: title, Picture: `https://blogging-app-backend-dpk0.onrender.com/Images/${file.filename}` })
-            .then(async (createdBlog) => {
+            blogModel.create({ Blog: blogstring, Owner: req.user._id, Title: title })
+                .then(async (createdBlog) => {
 
-                try {
+                    try {
 
-                    const createdBlogOwner = await userModel.findById({ _id: createdBlog.Owner })
+                        const createdBlogOwner = await userModel.findById({ _id: createdBlog.Owner })
 
-                    createdBlogOwner.Blogs.push(createdBlog._id)
+                        createdBlogOwner.Blogs.push(createdBlog._id)
 
-                    await createdBlogOwner.save()
+                        await createdBlogOwner.save()
 
-                    res.json(`Blog created with file`)
+                        res.json(`Blog created without file`)
 
-                } catch (error) {
-                    console.log(error);
-                }
-            })
-            .catch(er => console.log(er))
+                    } catch (error) {
+                        console.log(error);
+                    }
+                })
+                .catch(er => console.log(er))
+        }
+
+        else {
+            blogModel.create({ Blog: blogstring, Owner: req.user._id, Title: title, Picture: `https://blogging-app-backend-dpk0.onrender.com/Images/${file.filename}` })
+                .then(async (createdBlog) => {
+
+                    try {
+
+                        const createdBlogOwner = await userModel.findById({ _id: createdBlog.Owner })
+
+                        createdBlogOwner.Blogs.push(createdBlog._id)
+
+                        await createdBlogOwner.save()
+
+                        res.json(`Blog created with file`)
+
+                    } catch (error) {
+                        console.log(error);
+                    }
+                })
+                .catch(er => console.log(er))
+        }
     }
 }
 
