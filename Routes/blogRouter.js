@@ -8,9 +8,9 @@ const blogRouter = express.Router()
 
 blogRouter.get('/getallblogs', VerifyToken, getAllBlogs)
 
-blogRouter.post('/createblog', VerifyToken, blogTextValidation, CreateBlog)
+blogRouter.put('/createblog', VerifyToken, upload.single('file'), blogTextValidation, CreateBlog)
 
-blogRouter.post('/createblogwithfile', VerifyToken, blogTextValidation, CreateBlogWithFile)
+// blogRouter.put('/createblogwithfile', VerifyToken, upload.single('file'), blogTextValidation, CreateBlogWithFile)
 
 blogRouter.patch('/likeunlikeblog/:blogid', VerifyToken, LikeUnlikeBlog)
 
