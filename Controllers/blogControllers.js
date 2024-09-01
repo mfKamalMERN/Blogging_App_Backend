@@ -50,7 +50,7 @@ exports.CreateBlog = (req, res) => {
 
 exports.CreateBlogWithFile = (req, res) => {
 
-    const { blogstring, title } = req
+    const { blogstring, title } = req.body
     const file = req.file
 
     const errorV = validationResult(req)
