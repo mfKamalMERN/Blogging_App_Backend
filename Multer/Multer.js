@@ -18,7 +18,7 @@ exports.upload = multer({
         }
 
         else {
-            return cb(new Error("Wrong File Type, File must be png or jpg or jpef format"))
+            return cb(new Error("Wrong File Type, File must be png or jpg or jpeg format"))
         }
     }
 })

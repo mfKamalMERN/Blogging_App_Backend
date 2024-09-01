@@ -13,6 +13,7 @@ const blogschema = new mongoose.Schema({
         { Comment: { type: String, required: false }, CommentedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'userModel' } }
     ],
 
+    Picture: { type: String, required: false },
 })
 
 const blogModel = mongoose.model('blog', blogschema)
