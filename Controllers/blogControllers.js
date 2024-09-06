@@ -13,7 +13,7 @@ exports.getAllBlogs = (req, res) => {
 
                 const myblogs = await blogModel.find({ Owner: req.user._id })
 
-                for (let blog of [myblogs]) {
+                for (let blog of myblogs) {
                     blogstodisplay.push(blog)
                 }
 
