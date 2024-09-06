@@ -439,6 +439,27 @@ exports.GetUser = (req, res) => {
         .catch(er => console.log(er))
 }
 
+exports.PrivatePublic = (req, res) => {
+    const { isPrivate } = req.body
 
-
-
+    userModel.findById({ _id: req.user._id })
+        .then(async user => {
+            if (isPrivate) {
+                if (user.isPrivateAccount === isPrivate) res.json(`Already a private account`)
+                else {
+                    user.isPrivateAccount = isPrivate
+                    await user.save()
+                    res.json(`switched to private account`)
+                }
+            }
+            else {
+                if (user.isPrivateAccount === isPrivate) res.json(`Already a public account`)
+                else {
+                    user.isPrivateAccount = isPrivate
+                    await user.save()
+                    res.json(`Switched to public account`)
+                }
+            }
+        })
+        .catch(er => console.log(er))
+}

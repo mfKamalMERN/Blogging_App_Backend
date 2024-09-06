@@ -9,7 +9,26 @@ exports.getAllBlogs = (req, res) => {
             try {
                 const luser = await userModel.findById({ _id: req.user._id })
 
-                res.json({ AllBlogs: blogs, Token: req.cookies.token, LoggedUser: luser })
+                const blogstodisplay = []
+
+                const myblogs = await blogModel.find({ Owner: req.user._id })
+
+                for (let blog of myblogs) {
+                    blogstodisplay.push(blog)
+                }
+
+                for (let blog of blogs) {
+                    const blogowner = await userModel.findById({ _id: blog.Owner })
+
+                    if (blogowner.isPrivateAccount) {
+
+                        if (blogowner.Followers.includes(req.user._id)) blogstodisplay.push(blog)
+
+                    }
+                    else blogstodisplay.push(blog)
+                }
+
+                res.json({ AllBlogs: blogstodisplay, Token: req.cookies.token, LoggedUser: luser })
 
             } catch (error) {
                 console.log(error);
