@@ -1,5 +1,5 @@
 const express = require('express')
-const { SignUp, Login, FollowUnfollow, Logout, MyProfile, UploadProfilePic, UpdatePassword, UpdateName, getUserDp, getOwnerName, getCommentererName, GetUsers, GetFollowers, CheckFollowingStatus, GetFollowings, Find_New_People, DeleteMyAccount, GetUserBlogs, GetBlogLikesUsers, GetUser } = require('../Controllers/userControllers.js')
+const { SignUp, Login, FollowUnfollow, Logout, MyProfile, UploadProfilePic, UpdatePassword, UpdateName, getUserDp, getOwnerName, getCommentererName, GetUsers, GetFollowers, CheckFollowingStatus, GetFollowings, Find_New_People, DeleteMyAccount, GetUserBlogs, GetBlogLikesUsers, GetUser, PrivatePublic } = require('../Controllers/userControllers.js')
 const { signUpValidation, loginValidation, updatePasswordValidation, updateNameValidation } = require('../Validations/userValidations.js')
 const VerifyToken = require('../VerifyToken/VerifyToken.js')
 const { upload } = require('../Multer/Multer.js')
@@ -49,6 +49,8 @@ userRouter.delete('/deleteaccount', VerifyToken, DeleteMyAccount)
 userRouter.get('/getuserblogs/:userid', VerifyToken, GetUserBlogs)
 
 userRouter.get('/getuser/:userid', VerifyToken, GetUser)
+
+userRouter.patch('/privatepublic', VerifyToken, PrivatePublic)
 
 
 exports.userRouter = userRouter
