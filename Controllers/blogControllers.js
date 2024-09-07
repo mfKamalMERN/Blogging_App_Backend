@@ -13,10 +13,6 @@ exports.getAllBlogs = (req, res) => {
 
                 const myblogs = await blogModel.find({ Owner: req.user._id })
 
-                for (let blog of myblogs) {
-                    blogstodisplay.push(blog)
-                }
-
                 for (let blog of blogs) {
                     const blogowner = await userModel.findById({ _id: blog.Owner })
 
@@ -25,10 +21,15 @@ exports.getAllBlogs = (req, res) => {
                         if (blogowner.Followers.includes(req.user._id)) blogstodisplay.push(blog)
 
                     }
-                    else blogstodisplay.push(blog)
+                    else {
+                        blogstodisplay.push(blog)
+                        for (let blg of myblogs) {
+                            if (!blogstodisplay.includes(blg)) blogstodisplay.push(blg)
+                        }
+                    }
                 }
 
-                res.json({ AllBlogs: blogstodisplay, Token: req.cookies.token, LoggedUser: luser })
+                res.json({ AllBlogs: [... new Set(blogstodisplay)], Token: req.cookies.token, LoggedUser: luser })
 
             } catch (error) {
                 console.log(error);
