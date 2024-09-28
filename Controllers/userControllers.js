@@ -409,8 +409,27 @@ exports.GetUserBlogs = (req, res) => {
     userModel.findById({ _id: userid })
         .then(async targetuser => {
 
-            if (targetuser?.Followers?.includes(req.user._id) || userid == req.user._id) {
+            if (targetuser.isPrivateAccount) {
+                if (targetuser?.Followers?.includes(req.user._id) || userid == req.user._id) {
 
+                    try {
+
+                        for (let blogid of targetuser.Blogs) {
+
+                            targetblogs.push(await blogModel.findById({ _id: blogid }))
+
+                        }
+
+                        res.json({ UserBlogs: targetblogs, Token: req.cookies.token })
+
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+                else res.json({ UserBlogs: targetblogs, Token: req.cookies.token })
+            }
+
+            else {
                 try {
 
                     for (let blogid of targetuser.Blogs) {
@@ -425,7 +444,6 @@ exports.GetUserBlogs = (req, res) => {
                     console.log(error)
                 }
             }
-            else res.json({ UserBlogs: [], Token: req.cookies.token })
         })
         .catch(er => console.log(er))
 }
@@ -439,6 +457,27 @@ exports.GetUser = (req, res) => {
         .catch(er => console.log(er))
 }
 
+exports.PrivatePublic = (req, res) => {
+    const { isPrivate } = req.body
 
-
-
+    userModel.findById({ _id: req.user._id })
+        .then(async user => {
+            if (isPrivate) {
+                if (user.isPrivateAccount === isPrivate) res.json(`Already a private account`)
+                else {
+                    user.isPrivateAccount = isPrivate
+                    await user.save()
+                    res.json(`switched to private account`)
+                }
+            }
+            else {
+                if (user.isPrivateAccount === isPrivate) res.json(`Already a public account`)
+                else {
+                    user.isPrivateAccount = isPrivate
+                    await user.save()
+                    res.json(`Switched to public account`)
+                }
+            }
+        })
+        .catch(er => console.log(er))
+}
