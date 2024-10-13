@@ -9,18 +9,26 @@ const VerifyToken = (req, res, next) => {
     if (!token) res.json(`Missing token`)
 
     else {
-        jwt.verify(token, "jwt-secret-key", async (err, decoded) => {
+        jwt.verify(token, "jwt-secret-key", (err, decoded) => {
 
             if (err) res.json(err)
 
-            else {
-                try {
-                    req.user = await userModel.findById({ _id: decoded._id })
+            // else {
+            //     try {
+            //         req.user = await userModel.findById({ _id: decoded._id })
 
-                    next()
-                } catch (error) {
-                    console.log(error)
-                }
+            //         next()
+            //     } catch (error) {
+            //         console.log(error)
+            //     }
+            // }
+            else {
+                userModel.findById({ _id: decoded._id })
+                    .then((usr) => {
+                        req.user = usr;
+                        next();
+                    })
+                    .catch(er => console.log(er))
             }
         })
     }
