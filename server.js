@@ -9,12 +9,12 @@ const bodyParser = require('body-parser')
 
 
 const app = express()
-
-app.use(express.json())
-app.use(express.static('./Public'))
 app.use(cors(CorsOptions))
 
 app.use(cookieParser())
+app.use(express.json())
+app.use(express.static('./Public'))
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 
