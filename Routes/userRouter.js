@@ -32,7 +32,7 @@ userRouter.get('/getusername/:userid', VerifyToken, getOwnerName)
 
 userRouter.get('/getcommentername/:userid', VerifyToken, getCommentererName)
 
-userRouter.get('/getallusers', GetUsers)
+userRouter.get('/getallusers', VerifyToken, GetUsers)
 
 userRouter.get('/getfollowers/:userid', VerifyToken, GetFollowers)
 
@@ -46,7 +46,7 @@ userRouter.get('/findnewpeople', VerifyToken, Find_New_People)
 
 userRouter.delete('/deleteaccount', VerifyToken, DeleteMyAccount)
 
-userRouter.get('/getuserblogs/:userid', GetUserBlogs)
+userRouter.get('/getuserblogs/:userid', VerifyToken, GetUserBlogs)
 
 userRouter.get('/getuser/:userid', VerifyToken, GetUser)
 

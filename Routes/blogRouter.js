@@ -6,7 +6,7 @@ const { upload } = require("../Multer/Multer.js")
 
 const blogRouter = express.Router()
 
-blogRouter.get('/getallblogs', getAllBlogs)
+blogRouter.get('/getallblogs', VerifyToken, getAllBlogs)
 
 blogRouter.put('/createblog', VerifyToken, upload.single('file'), blogTextValidation, CreateBlog)
 
