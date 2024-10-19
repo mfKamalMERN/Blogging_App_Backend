@@ -123,7 +123,7 @@ exports.FollowUnfollow = async (req, res) => {
 
 
 exports.Logout = (req, res) => {
-    res.clearCookie('token').json(`${req.user.Name} Logged Out`)
+    res.clearCookie('token').json({ Msg: `${req.user.Name} Logged Out`, LoggedOut: true })
 }
 
 exports.MyProfile = (req, res) => {
