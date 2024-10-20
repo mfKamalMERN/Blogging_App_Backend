@@ -64,9 +64,9 @@ exports.Login = (req, res) => {
 
                         const token = jwt.sign({ _id: user._id }, "jwt-secret-key", { expiresIn: "1h" })
 
-                        res.cookie('token', token);
                         const { Name, Email, Contact, DP, Blogs, Followers, Followings, isPrivateAccount } = user;
                         // const{Password, ...Others} = user;
+                        res.cookie('token', token);
                         res.json({ LoggedIn: true, Msg: `Welcome ${user.Name}! `, Token: token, LoggedUser: { Name, Email, Contact, DP, Blogs, Followers, Followings, isPrivateAccount } })
 
                     }
