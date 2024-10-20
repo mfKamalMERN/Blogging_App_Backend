@@ -281,3 +281,11 @@ exports.UploadBlogPic = (req, res) => {
         })
         .catch(er => console.log(er))
 }
+
+exports.RemoveBlogPic = (req, res) => {
+    const { blogid } = req.params;
+
+    blogModel.findByIdAndUpdate({ _id: blogid }, { Picture: null })
+        .then((updatedBlog) => res.json(updatedBlog.Picture))
+        .catch(er => console.log(er))
+}

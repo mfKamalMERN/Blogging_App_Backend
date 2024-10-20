@@ -1,6 +1,6 @@
 const express = require("express")
 const VerifyToken = require("../VerifyToken/VerifyToken")
-const { CreateBlog, LikeUnlikeBlog, AddComment, DeleteComment, EditComment, EditBlogText, getAllBlogs, DeleteBlog, GetBlog, UploadBlogPic, CreateBlogWithFile } = require("../Controllers/blogControllers.js")
+const { CreateBlog, LikeUnlikeBlog, AddComment, DeleteComment, EditComment, EditBlogText, getAllBlogs, DeleteBlog, GetBlog, UploadBlogPic, CreateBlogWithFile, RemoveBlogPic } = require("../Controllers/blogControllers.js")
 const { blogTextValidation, updateBlogTextValidation } = require("../Validations/blogValidations.js")
 const { upload } = require("../Multer/Multer.js")
 
@@ -27,5 +27,7 @@ blogRouter.delete('/deleteblog/:blogid', VerifyToken, DeleteBlog)
 blogRouter.get('/getblog/:blogid', VerifyToken, GetBlog)
 
 blogRouter.put('/uploadblogpicture/:blogid', VerifyToken, upload.single('file'), UploadBlogPic)
+
+blogRouter.patch('/removeblogpic/:blogid', VerifyToken, RemoveBlogPic)
 
 module.exports = blogRouter
