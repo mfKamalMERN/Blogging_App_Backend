@@ -48,38 +48,34 @@ exports.SignUp = async (req, res) => {
 exports.Login = (req, res) => {
 
     const { email, password } = req.body
-    const token = req.cookies.token;
-    if (token) res.json({ AlreadyLogged: true })
+
+    const errorV = validationResult(req)
+
+    if (!errorV.isEmpty()) {
+        res.json({ ValidationError: true, actError: errorV.array() })
+    }
+
     else {
+        userModel.findOne({ Email: email })
+            .then((user) => {
+                if (user) {
 
-        const errorV = validationResult(req)
+                    if (user.Password === password) {
 
-        if (!errorV.isEmpty()) {
-            res.json({ ValidationError: true, actError: errorV.array() })
-        }
+                        const token = jwt.sign({ _id: user._id }, "jwt-secret-key", { expiresIn: "1h" })
 
-        else {
-            userModel.findOne({ Email: email })
-                .then((user) => {
-                    if (user) {
+                        res.cookie('token', token);
 
-                        if (user.Password === password) {
+                        res.json({ LoggedIn: true, Msg: `Welcome ${user.Name}! `, Token: token, LoggedUser: user })
 
-                            const token = jwt.sign({ _id: user._id }, "jwt-secret-key", { expiresIn: "1h" })
-
-                            res.cookie('token', token);
-
-                            res.json({ LoggedIn: true, Msg: `Welcome ${user.Name}! `, Token: token, LoggedUser: user })
-
-                        }
-                        else res.json(`Incorrect Password`)
                     }
-                    else {
-                        res.json("No record found")
-                    }
-                })
-                .catch(er => console.log(er))
-        }
+                    else res.json(`Incorrect Password`)
+                }
+                else {
+                    res.json("No record found")
+                }
+            })
+            .catch(er => console.log(er))
     }
 }
 
