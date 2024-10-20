@@ -286,6 +286,6 @@ exports.RemoveBlogPic = (req, res) => {
     const { blogid } = req.params;
 
     blogModel.findByIdAndUpdate({ _id: blogid }, { Picture: null })
-        .then((updatedBlog) => res.json(updatedBlog.Picture))
+        .then((updatedBlog) => res.json({ URL: updatedBlog.Picture, Msg: `Pic Removed` }))
         .catch(er => console.log(er))
 }
