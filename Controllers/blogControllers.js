@@ -26,9 +26,9 @@ exports.getAllBlogs = (req, res) => {
                     }
                 }
 
-                if (!luser.isPrivateAccount) res.json({ AllBlogs: [...new Set(blogstodisplay)], Token: req.tokeN, LoggedUser: luser })
+                if (!luser.isPrivateAccount) res.json({ AllBlogs: [...new Set(blogstodisplay)], Token: req.cookies.token, LoggedUser: luser })
 
-                else res.json({ AllBlogs: [...new Set(blogstodisplay), ...myblogs], Token: req.tokeN, LoggedUser: luser })
+                else res.json({ AllBlogs: [...new Set(blogstodisplay), ...myblogs], Token: req.cookies.token, LoggedUser: luser })
 
             } catch (error) {
                 console.log(error);
