@@ -19,7 +19,7 @@ const VerifyToken = (req, res, next) => {
             else {
                 try {
                     req.user = await userModel.findById({ _id: decoded._id })
-
+                    req.tokeN = token
                     next()
                 } catch (error) {
                     console.log(error)
