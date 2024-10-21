@@ -67,6 +67,7 @@ exports.Login = (req, res) => {
                         const { _id, Name, Email, Contact, DP, Blogs, Followers, Followings, isPrivateAccount } = user;
                         // const{Password, ...Others} = user;
                         res.cookie('token', token, { maxAge: 1000 * 60 * 10, httpOnly: false });
+                        localStorage.setItem('token', token)
                         res.json({ LoggedIn: true, Msg: `Welcome ${user.Name}! `, Token: token, LoggedUser: { _id, Name, Email, Contact, DP, Blogs, Followers, Followings, isPrivateAccount } })
 
                     }
@@ -124,7 +125,9 @@ exports.FollowUnfollow = async (req, res) => {
 
 
 exports.Logout = (req, res) => {
-    res.clearCookie('token').json({ Msg: `${req.user.Name} Logged Out`, LoggedOut: true })
+    res.clearCookie('token')
+    localStorage.clear()
+    res.json({ Msg: `${req.user.Name} Logged Out`, LoggedOut: true })
 }
 
 exports.MyProfile = (req, res) => {
