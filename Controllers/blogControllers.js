@@ -7,28 +7,29 @@ exports.getAllBlogs = (req, res) => {
     blogModel.find()
         .then(async (blogs) => {
             try {
-                const luser = await userModel.findById({ _id: req.user._id })
+                // const luser = await userModel.findById({ _id: req.user._id })
 
-                const blogstodisplay = []
+                // const blogstodisplay = []
 
-                const myblogs = await blogModel.find({ Owner: req.user._id })
+                // const myblogs = await blogModel.find({ Owner: req.user._id })
 
-                for (let blog of blogs) {
-                    if (!myblogs.includes(blog)) {
+                // for (let blog of blogs) {
+                //     if (!myblogs.includes(blog)) {
 
-                        const blogowner = await userModel.findById({ _id: blog.Owner })
-                        if (blogowner.isPrivateAccount) {
+                //         const blogowner = await userModel.findById({ _id: blog.Owner })
+                //         if (blogowner.isPrivateAccount) {
 
-                            if (blogowner.Followers.includes(req.user._id)) blogstodisplay.push(blog)
+                //             if (blogowner.Followers.includes(req.user._id)) blogstodisplay.push(blog)
 
-                        }
-                        else blogstodisplay.push(blog)
-                    }
-                }
+                //         }
+                //         else blogstodisplay.push(blog)
+                //     }
+                // }
 
-                if (!luser.isPrivateAccount) res.json({ AllBlogs: [...new Set(blogstodisplay)], Token: req.cookies.token, LoggedUser: luser })
+                // if (!luser.isPrivateAccount) res.json({ AllBlogs: [...new Set(blogstodisplay)], Token: req.cookies.token, LoggedUser: luser })
 
-                else res.json({ AllBlogs: [...new Set(blogstodisplay), ...myblogs], Token: req.cookies.token, LoggedUser: luser })
+                // else res.json({ AllBlogs: [...new Set(blogstodisplay), ...myblogs], Token: req.cookies.token, LoggedUser: luser })
+                 res.json({ AllBlogs: blogs, Token: req.cookies.token, LoggedUser: luser })
 
             } catch (error) {
                 console.log(error);
