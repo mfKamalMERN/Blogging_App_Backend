@@ -66,7 +66,7 @@ exports.Login = (req, res) => {
 
                         const { _id, Name, Email, Contact, DP, Blogs, Followers, Followings, isPrivateAccount } = user;
                         // const{Password, ...Others} = user;
-                        res.cookie('token', token, { maxAge: 1000 * 60 * 10, httpOnly: false });
+                        res.cookie('token', token);
                         localStorage.setItem('token', token)
                         res.json({ LoggedIn: true, Msg: `Welcome ${user.Name}! `, Token: token, LoggedUser: { _id, Name, Email, Contact, DP, Blogs, Followers, Followings, isPrivateAccount } })
 
