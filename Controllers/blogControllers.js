@@ -29,7 +29,7 @@ exports.getAllBlogs = (req, res) => {
                 // if (!luser.isPrivateAccount) res.json({ AllBlogs: [...new Set(blogstodisplay)], Token: req.cookies.token, LoggedUser: luser })
 
                 // else res.json({ AllBlogs: [...new Set(blogstodisplay), ...myblogs], Token: req.cookies.token, LoggedUser: luser })
-                 res.json({ AllBlogs: blogs, Token: req.cookies.token, LoggedUser: luser })
+                res.json({ AllBlogs: blogs })
 
             } catch (error) {
                 console.log(error);
