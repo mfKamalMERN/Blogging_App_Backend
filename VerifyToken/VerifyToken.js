@@ -6,7 +6,10 @@ const VerifyToken = (req, res, next) => {
 
     const token = req.cookies.token
 
-    if (!token) res.json(`Missing token`)
+    if (!token) {
+        res.clearCookie('token')
+        res.json(`Missing token`)
+    }
 
     else {
         jwt.verify(token, "jwt-secret-key", async (err, decoded) => {
