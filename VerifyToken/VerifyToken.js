@@ -4,11 +4,10 @@ const userModel = require('../Models/usermodel.js')
 
 const VerifyToken = (req, res, next) => {
 
-    const token = req.cookies?.token || localStorage.getItem('token')
+    const token = req.cookies.token
 
     if (!token) {
         res.clearCookie('token')
-        localStorage.clear()
         res.json(`Missing token`)
     }
 
