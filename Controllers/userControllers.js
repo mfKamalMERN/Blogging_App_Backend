@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator");
 const userModel = require("../Models/usermodel.js");
 const jwt = require('jsonwebtoken');
 const blogModel = require("../Models/blogmodel.js");
+const { getAllBlogs } = require("./blogControllers.js");
 
 
 exports.SignUp = async (req, res) => {
@@ -67,7 +68,9 @@ exports.Login = (req, res) => {
                         const { _id, Name, Email, Contact, DP, Blogs, Followers, Followings, isPrivateAccount } = user;
                         // const{Password, ...Others} = user;
                         res.cookie('token', token);
-                        res.json({ LoggedIn: true, Msg: `Welcome ${user.Name}! `, Token: token, LoggedUser: { _id, Name, Email, Contact, DP, Blogs, Followers, Followings, isPrivateAccount } })
+                        const allblogs = getAllBlogs();
+
+                        res.json({ LoggedIn: true, Msg: `Welcome ${user.Name}! `, Token: token, LoggedUser: { _id, Name, Email, Contact, DP, Blogs, Followers, Followings, isPrivateAccount }, AllBlogs: allblogs })
 
                     }
                     else res.json(`Incorrect Password`)
