@@ -109,7 +109,7 @@ exports.FollowUnfollow = async (req, res) => {
         }
 
         else {
-            targetuser.Followers.push(req.user._id)
+            targetuser.Followers.push(loggeduserid)
 
             me.Followings.push(targetuser._id)
 
