@@ -66,8 +66,8 @@ exports.Login = (req, res) => {
 
                         const { _id, Name, Email, Contact, DP, Blogs, Followers, Followings, isPrivateAccount } = user;
                         // const{Password, ...Others} = user;
-
-                        // res.cookie('token', token);
+                        
+                        res.cookie('token', token);
 
                         res.json({ LoggedIn: true, Msg: `Welcome ${user.Name}! `, Token: token, LoggedUser: { _id, Name, Email, Contact, DP, Blogs, Followers, Followings, isPrivateAccount } })
 
@@ -182,14 +182,13 @@ exports.UpdatePassword = (req, res) => {
 
 exports.UpdateName = (req, res) => {
     const newName = req.body.newName
-    const { myid } = req.body
 
     const errorV = validationResult(req)
 
     if (!errorV.isEmpty()) res.json({ ValidationError: true, ActError: errorV.array() })
 
     else {
-        userModel.findById({ _id: myid })
+        userModel.findById({ _id: req.user._id })
             .then(async (user) => {
                 if (user.Name === newName) res.json({ Msg: `${newName} is already existing`, UpdatedUser: user })
                 else {
