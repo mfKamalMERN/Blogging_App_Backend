@@ -24,7 +24,7 @@ userRouter.put('/uploadprofilepic', VerifyToken, upload.single('file'), UploadPr
 
 userRouter.patch('/updatepassword', VerifyToken, updatePasswordValidation, UpdatePassword)
 
-userRouter.patch('/updatename', VerifyToken, updateNameValidation, UpdateName)
+userRouter.patch('/updatename', updateNameValidation, UpdateName)
 
 userRouter.get('/getuserdp/:userid', getUserDp)
 
