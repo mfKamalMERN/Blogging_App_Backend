@@ -289,3 +289,33 @@ exports.RemoveBlogPic = (req, res) => {
         .then(res.json({ URL: null, Msg: `Pic Removed` }))
         .catch(er => console.log(er));
 }
+
+exports.getAllBlogs2 = async (req, res) => {
+    const { userid } = req.params;
+    const Allblogs = [];
+
+    blogModel.find({})
+        .then(async (blogs) => {
+            for (let blog of blogs) {
+                var me = await userModel.findById({ _id: userid });
+                const blogowner = await userModel.findById({ _id: blog.Owner })
+
+                if (blog.Owner == userid) Allblogs.push(blog)
+                else {
+                    try {
+                        if (blogowner.isPrivateAccount) {
+                            if (me.Followings.includes(blogowner._id)) Allblogs.push(blog);
+                        }
+                        else Allblogs.push(blog);
+
+                        
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+            }
+            res.json({ AllBlogs: Allblogs, LoggedUser: me })
+
+        })
+        .catch(er => console.log(er))
+}
