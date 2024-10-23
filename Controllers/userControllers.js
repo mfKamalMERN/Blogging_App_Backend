@@ -90,10 +90,10 @@ exports.FollowUnfollow = async (req, res) => {
         const targetuser = await userModel.findById({ _id: userid })
         const me = await userModel.findById({ _id: loggeduserid })
 
-        if (userid == req.user._id) res.json(`Invalid request`)
+        if (userid == loggeduserid) res.json(`Invalid request`)
 
-        else if (targetuser.Followers.includes(req.user._id)) {
-            const index = targetuser.Followers.indexOf(req.user._id)
+        else if (targetuser.Followers.includes(loggeduserid)) {
+            const index = targetuser.Followers.indexOf(loggeduserid)
 
             targetuser.Followers.splice(index, 1)
 
