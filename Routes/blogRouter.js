@@ -14,7 +14,7 @@ blogRouter.put('/createblog/:loggeduserid', upload.single('file'), blogTextValid
 
 // blogRouter.put('/createblogwithfile', VerifyToken, upload.single('file'), blogTextValidation, CreateBlogWithFile)
 
-blogRouter.patch('/likeunlikeblog/:blogid', LikeUnlikeBlog)
+blogRouter.patch('/likeunlikeblog/:blogid/:loggeduserid', LikeUnlikeBlog)
 
 blogRouter.post('/addcomment/:blogid/:loggeduserid', AddComment)
 
