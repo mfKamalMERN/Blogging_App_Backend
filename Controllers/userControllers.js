@@ -126,7 +126,7 @@ exports.FollowUnfollow = async (req, res) => {
 
 
 exports.Logout = (req, res) => {
-    // res.clearCookie('token')
+    res.clearCookie('token')
     res.json({ Msg: `${req.user.Name} Logged Out`, LoggedOut: true })
 }
 
