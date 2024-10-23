@@ -28,7 +28,7 @@ userRouter.patch('/updatename', VerifyToken, updateNameValidation, UpdateName)
 
 userRouter.get('/getuserdp/:userid', getUserDp)
 
-userRouter.get('/getusername/:userid', VerifyToken, getOwnerName)
+userRouter.get('/getusername/:userid', getOwnerName)
 
 userRouter.get('/getcommentername/:userid', VerifyToken, getCommentererName)
 
