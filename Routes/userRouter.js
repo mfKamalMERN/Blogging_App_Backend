@@ -48,7 +48,7 @@ userRouter.delete('/deleteaccount', VerifyToken, DeleteMyAccount)
 
 userRouter.get('/getuserblogs/:userid', VerifyToken, GetUserBlogs)
 
-userRouter.get('/getuser/:userid', VerifyToken, GetUser)
+userRouter.get('/getuser/:userid', GetUser)
 
 userRouter.patch('/privatepublic', VerifyToken, PrivatePublic)
 
