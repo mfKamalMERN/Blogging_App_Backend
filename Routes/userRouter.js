@@ -32,7 +32,7 @@ userRouter.get('/getusername/:userid', VerifyToken, getOwnerName)
 
 userRouter.get('/getcommentername/:userid', VerifyToken, getCommentererName)
 
-userRouter.get('/getallusers', VerifyToken, GetUsers)
+userRouter.get('/getallusers', GetUsers)
 
 userRouter.get('/getfollowers/:userid', VerifyToken, GetFollowers)
 
