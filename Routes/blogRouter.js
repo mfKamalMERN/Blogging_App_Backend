@@ -6,30 +6,30 @@ const { upload } = require("../Multer/Multer.js")
 
 const blogRouter = express.Router()
 
-blogRouter.get('/getallblogs', VerifyToken, getAllBlogs)
+blogRouter.get('/getallblogs/:loggeduserid', getAllBlogs)
 
 blogRouter.get('/getallblogs2/:userid', getAllBlogs2)
 
-blogRouter.put('/createblog', VerifyToken, upload.single('file'), blogTextValidation, CreateBlog)
+blogRouter.put('/createblog/:loggeduserid', upload.single('file'), blogTextValidation, CreateBlog)
 
 // blogRouter.put('/createblogwithfile', VerifyToken, upload.single('file'), blogTextValidation, CreateBlogWithFile)
 
-blogRouter.patch('/likeunlikeblog/:blogid', VerifyToken, LikeUnlikeBlog)
+blogRouter.patch('/likeunlikeblog/:blogid', LikeUnlikeBlog)
 
-blogRouter.post('/addcomment/:blogid', VerifyToken, AddComment)
+blogRouter.post('/addcomment/:blogid/:loggeduserid', AddComment)
 
-blogRouter.patch('/deletecomment/:blogid/:commentid', VerifyToken, DeleteComment)
+blogRouter.patch('/deletecomment/:blogid/:commentid', DeleteComment)
 
-blogRouter.patch('/editcomment/:blogid/:commentid', VerifyToken, EditComment)
+blogRouter.patch('/editcomment/:blogid/:commentid', EditComment)
 
-blogRouter.patch('/editblogtext/:blogid', VerifyToken, updateBlogTextValidation, EditBlogText)
+blogRouter.patch('/editblogtext/:blogid', updateBlogTextValidation, EditBlogText)
 
-blogRouter.delete('/deleteblog/:blogid', VerifyToken, DeleteBlog)
+blogRouter.delete('/deleteblog/:blogid', DeleteBlog)
 
-blogRouter.get('/getblog/:blogid', VerifyToken, GetBlog)
+blogRouter.get('/getblog/:blogid', GetBlog)
 
-blogRouter.put('/uploadblogpicture/:blogid', VerifyToken, upload.single('file'), UploadBlogPic)
+blogRouter.put('/uploadblogpicture/:blogid/:loggeduserid', upload.single('file'), UploadBlogPic)
 
-blogRouter.patch('/removeblogpic/:blogid', VerifyToken, RemoveBlogPic)
+blogRouter.patch('/removeblogpic/:blogid', RemoveBlogPic)
 
 module.exports = blogRouter

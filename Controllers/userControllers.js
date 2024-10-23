@@ -66,10 +66,10 @@ exports.Login = (req, res) => {
 
                         // res.cookie('token', token);
                         res.cookie('token', token);
-                        
+
                         const { _id, Name, Email, Contact, DP, Blogs, Followers, Followings, isPrivateAccount } = user;
                         // const{Password, ...Others} = user;
-                        
+
 
                         res.json({ LoggedIn: true, Msg: `Welcome ${user.Name}! `, Token: token, LoggedUser: { _id, Name, Email, Contact, DP, Blogs, Followers, Followings, isPrivateAccount } })
 
@@ -85,11 +85,11 @@ exports.Login = (req, res) => {
 }
 
 exports.FollowUnfollow = async (req, res) => {
-    const { userid } = req.params
+    const { userid, loggeduserid } = req.params
 
     try {
         const targetuser = await userModel.findById({ _id: userid })
-        const me = await userModel.findById({ _id: req.user._id })
+        const me = await userModel.findById({ _id: loggeduserid })
 
         if (userid == req.user._id) res.json(`Invalid request`)
 
@@ -133,9 +133,9 @@ exports.Logout = (req, res) => {
 }
 
 exports.MyProfile = (req, res) => {
-    const luser = req.user._id
+    const { loggeduserid } = req.params
 
-    userModel.findById({ _id: luser })
+    userModel.findById({ _id: loggeduserid })
         .then(user => res.json({ Profile: user }))
         .catch(er => console.log(er))
 
@@ -143,9 +143,10 @@ exports.MyProfile = (req, res) => {
 
 exports.UploadProfilePic = async (req, res) => {
     const file = req.file
+    const { loggeduserid } = req.params
 
     try {
-        const loggeduser = await userModel.findById({ _id: req.user._id })
+        const loggeduser = await userModel.findById({ _id: loggeduserid })
 
         loggeduser.DP = `https://blogging-app-backend-dpk0.onrender.com/Images/${file.filename}`
 
@@ -160,13 +161,14 @@ exports.UploadProfilePic = async (req, res) => {
 
 exports.UpdatePassword = (req, res) => {
     const { newpassword } = req.body
+    const { loggeduserid } = req.params
 
     const errorV = validationResult(req)
 
     if (!errorV.isEmpty()) res.json({ ValidationError: true, ActError: errorV.array() })
     else {
 
-        userModel.findById({ _id: req.user._id })
+        userModel.findById({ _id: loggeduserid })
             .then(async (loggeduser) => {
                 if (loggeduser.Password === newpassword) res.json(`Please type a new password`)
                 else {
@@ -184,13 +186,13 @@ exports.UpdatePassword = (req, res) => {
 
 exports.UpdateName = (req, res) => {
     const newName = req.body.newName
-
+    const { loggeduserid } = req.params
     const errorV = validationResult(req)
 
     if (!errorV.isEmpty()) res.json({ ValidationError: true, ActError: errorV.array() })
 
     else {
-        userModel.findById({ _id: req.user._id })
+        userModel.findById({ _id: loggeduserid })
             .then(async (user) => {
                 if (user.Name === newName) res.json({ Msg: `${newName} is already existing`, UpdatedUser: user })
                 else {
@@ -284,12 +286,12 @@ exports.GetFollowers = (req, res) => {
 }
 
 exports.CheckFollowingStatus = async (req, res) => {
-    const { userid } = req.params
+    const { userid, loggeduserid } = req.params
 
     try {
         const user = await userModel.findById({ _id: userid })
 
-        if (user.Followers.includes(req.user._id)) res.json({ isFollowing: true })
+        if (user.Followers.includes(loggeduserid)) res.json({ isFollowing: true })
 
         else res.json({ isFollowing: false })
 
@@ -377,8 +379,8 @@ exports.Find_New_People = async (req, res) => {
 
 
 exports.DeleteMyAccount = (req, res) => {
-
-    userModel.findByIdAndDelete({ _id: req.user._id })
+    const { loggeduserid } = req.params
+    userModel.findByIdAndDelete({ _id: loggeduserid })
         .then(async user => {
 
             const followingids = user.Followings
@@ -409,14 +411,14 @@ exports.DeleteMyAccount = (req, res) => {
 
 
 exports.GetUserBlogs = (req, res) => {
-    const { userid } = req.params
+    const { userid, loggeduserid } = req.params
     const targetblogs = []
 
     userModel.findById({ _id: userid })
         .then(async targetuser => {
 
             if (targetuser.isPrivateAccount) {
-                if (targetuser?.Followers?.includes(req.user._id) || userid == req.user._id) {
+                if (targetuser?.Followers?.includes(loggeduserid) || userid == loggeduserid) {
 
                     try {
 
@@ -465,8 +467,9 @@ exports.GetUser = (req, res) => {
 
 exports.PrivatePublic = (req, res) => {
     const { isPrivate } = req.body
+    const { loggeduserid } = req.params
 
-    userModel.findById({ _id: req.user._id })
+    userModel.findById({ _id: loggeduserid })
         .then(async user => {
             if (isPrivate) {
                 if (user.isPrivateAccount === isPrivate) res.json(`Already a private account`)

@@ -4,14 +4,15 @@ const userModel = require("../Models/usermodel.js")
 
 
 exports.getAllBlogs = (req, res) => {
+    const { loggeduserid } = req.params
     blogModel.find()
         .then(async (blogs) => {
             try {
-                const luser = await userModel.findById({ _id: req.user._id })
+                const luser = await userModel.findById({ _id: loggeduserid })
 
                 const blogstodisplay = []
 
-                const myblogs = await blogModel.find({ Owner: req.user._id })
+                const myblogs = await blogModel.find({ Owner: loggeduserid })
 
                 for (let blog of blogs) {
                     if (!myblogs.includes(blog)) {
@@ -19,7 +20,7 @@ exports.getAllBlogs = (req, res) => {
                         const blogowner = await userModel.findById({ _id: blog.Owner })
                         if (blogowner.isPrivateAccount) {
 
-                            if (blogowner.Followers.includes(req.user._id)) blogstodisplay.push(blog)
+                            if (blogowner.Followers.includes(loggeduserid)) blogstodisplay.push(blog)
 
                         }
                         else blogstodisplay.push(blog)
@@ -39,6 +40,7 @@ exports.getAllBlogs = (req, res) => {
 
 exports.CreateBlog = (req, res) => {
     const { blogstring, title } = req.body
+    const { loggeduserid } = req.params
     const file = req.file
 
     const errorV = validationResult(req)
@@ -48,7 +50,7 @@ exports.CreateBlog = (req, res) => {
     else {
         if (!file) {
 
-            blogModel.create({ Blog: blogstring, Owner: req.user._id, Title: title })
+            blogModel.create({ Blog: blogstring, Owner: loggeduserid, Title: title })
                 .then(async (createdBlog) => {
 
                     try {
@@ -69,7 +71,7 @@ exports.CreateBlog = (req, res) => {
         }
 
         else {
-            blogModel.create({ Blog: blogstring, Owner: req.user._id, Title: title, Picture: `https://blogging-app-backend-dpk0.onrender.com/Images/${file.filename}` })
+            blogModel.create({ Blog: blogstring, Owner: loggeduserid, Title: title, Picture: `https://blogging-app-backend-dpk0.onrender.com/Images/${file.filename}` })
                 .then(async (createdBlog) => {
 
                     try {
@@ -92,14 +94,14 @@ exports.CreateBlog = (req, res) => {
 }
 
 exports.LikeUnlikeBlog = async (req, res) => {
-    const { blogid } = req.params
+    const { blogid, loggeduserid } = req.params
 
     try {
         const targetblog = await blogModel.findById({ _id: blogid })
 
-        if (targetblog.Likes.includes(req.user._id)) {
+        if (targetblog.Likes.includes(loggeduserid)) {
 
-            const index = targetblog.Likes.indexOf(req.user._id)
+            const index = targetblog.Likes.indexOf(loggeduserid)
             targetblog.Likes.splice(index, 1)
 
             await targetblog.save()
@@ -109,7 +111,7 @@ exports.LikeUnlikeBlog = async (req, res) => {
         }
 
         else {
-            targetblog.Likes.push(req.user._id)
+            targetblog.Likes.push(loggeduserid)
             await targetblog.save()
             res.json({ Status: "Liked", Likes: targetblog.Likes })
         }
@@ -122,14 +124,14 @@ exports.LikeUnlikeBlog = async (req, res) => {
 }
 
 exports.AddComment = async (req, res) => {
-    const blogid = req.params.blogid
+    const { blogid, loggeduserid } = req.params
     const comment = req.body.newComment
 
     try {
 
         const targetblog = await blogModel.findById({ _id: blogid })
 
-        targetblog.Comments.push({ Comment: comment, CommentedBy: req.user._id })
+        targetblog.Comments.push({ Comment: comment, CommentedBy: loggeduserid })
 
         await targetblog.save()
 
@@ -254,7 +256,7 @@ exports.GetBlog = async (req, res) => {
 
 exports.UploadBlogPic = (req, res) => {
     const file = req.file
-    const { blogid } = req.params
+    const { blogid, loggeduserid } = req.params
 
     blogModel.findById({ _id: blogid })
         .then(async (targetblog) => {
@@ -262,7 +264,7 @@ exports.UploadBlogPic = (req, res) => {
             try {
                 const blogowner = await userModel.findById({ _id: targetblog.Owner })
 
-                const loggeduser = await userModel.findById({ _id: req.user._id })
+                const loggeduser = await userModel.findById({ _id: loggeduserid })
 
                 if (blogowner.Email === loggeduser.Email) {
 
@@ -273,7 +275,7 @@ exports.UploadBlogPic = (req, res) => {
                     res.json({ Issue: false, Msg: "upload successful", url: targetblog.Picture })
                 }
 
-                else res.json({ Issue: true, Msg: 'Invalid request', luser: req.user._id, owner: targetblog.Owner })
+                else res.json({ Issue: true, Msg: 'Invalid request', luser: loggeduserid, owner: targetblog.Owner })
             }
             catch (error) {
                 console.log(error)
@@ -308,7 +310,7 @@ exports.getAllBlogs2 = async (req, res) => {
                         }
                         else Allblogs.push(blog);
 
-                        
+
                     } catch (error) {
                         console.log(error);
                     }

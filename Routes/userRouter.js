@@ -14,43 +14,43 @@ userRouter.post('/signup', signUpValidation, SignUp)
 
 userRouter.post('/login', loginValidation, Login)
 
-userRouter.get('/logout', VerifyToken, Logout)
+userRouter.get('/logout', Logout)
 
-userRouter.put('/followunfollow/:userid', VerifyToken, FollowUnfollow)
+userRouter.put('/followunfollow/:userid/:loggeduserid', FollowUnfollow)
 
-userRouter.get('/myprofile', VerifyToken, MyProfile)
+userRouter.get('/myprofile/:loggeduserid', MyProfile)
 
-userRouter.put('/uploadprofilepic', VerifyToken, upload.single('file'), UploadProfilePic)
+userRouter.put('/uploadprofilepic/:loggeduserid', upload.single('file'), UploadProfilePic)
 
-userRouter.patch('/updatepassword', VerifyToken, updatePasswordValidation, UpdatePassword)
+userRouter.patch('/updatepassword/:loggeduserid', updatePasswordValidation, UpdatePassword)
 
-userRouter.patch('/updatename', VerifyToken, updateNameValidation, UpdateName)
+userRouter.patch('/updatename/:loggeduserid', updateNameValidation, UpdateName)
 
-userRouter.get('/getuserdp/:userid', VerifyToken, getUserDp)
+userRouter.get('/getuserdp/:userid', getUserDp)
 
-userRouter.get('/getusername/:userid', VerifyToken, getOwnerName)
+userRouter.get('/getusername/:userid', getOwnerName)
 
-userRouter.get('/getcommentername/:userid', VerifyToken, getCommentererName)
+userRouter.get('/getcommentername/:userid', getCommentererName)
 
-userRouter.get('/getallusers', VerifyToken, GetUsers)
+userRouter.get('/getallusers', GetUsers)
 
-userRouter.get('/getfollowers/:userid', VerifyToken, GetFollowers)
+userRouter.get('/getfollowers/:userid', GetFollowers)
 
-userRouter.get('/getfollowings/:userid', VerifyToken, GetFollowings)
+userRouter.get('/getfollowings/:userid', GetFollowings)
 
-userRouter.get('/checkfollowingstatus/:userid', VerifyToken, CheckFollowingStatus)
+userRouter.get('/checkfollowingstatus/:userid/:loggeduserid', CheckFollowingStatus)
 
-userRouter.get('/likesusers/:blogid', VerifyToken, GetBlogLikesUsers)
+userRouter.get('/likesusers/:blogid', GetBlogLikesUsers)
 
-userRouter.get('/findnewpeople', VerifyToken, Find_New_People)
+userRouter.get('/findnewpeople', Find_New_People)
 
-userRouter.delete('/deleteaccount', VerifyToken, DeleteMyAccount)
+userRouter.delete('/deleteaccount/:loggeduserid', DeleteMyAccount)
 
-userRouter.get('/getuserblogs/:userid', VerifyToken, GetUserBlogs)
+userRouter.get('/getuserblogs/:userid/:loggeduserid', GetUserBlogs)
 
-userRouter.get('/getuser/:userid', VerifyToken, GetUser)
+userRouter.get('/getuser/:userid', GetUser)
 
-userRouter.patch('/privatepublic', VerifyToken, PrivatePublic)
+userRouter.patch('/privatepublic/:loggeduserid', PrivatePublic)
 
 
 exports.userRouter = userRouter
