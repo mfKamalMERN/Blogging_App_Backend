@@ -14,7 +14,7 @@ userRouter.post('/signup', signUpValidation, SignUp)
 
 userRouter.post('/login', loginValidation, Login)
 
-userRouter.get('/logout', VerifyToken, Logout)
+userRouter.get('/logout', Logout)
 
 userRouter.put('/followunfollow/:userid', VerifyToken, FollowUnfollow)
 
