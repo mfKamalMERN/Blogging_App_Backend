@@ -26,7 +26,7 @@ userRouter.patch('/updatepassword', VerifyToken, updatePasswordValidation, Updat
 
 userRouter.patch('/updatename', VerifyToken, updateNameValidation, UpdateName)
 
-userRouter.get('/getuserdp/:userid', VerifyToken, getUserDp)
+userRouter.get('/getuserdp/:userid', getUserDp)
 
 userRouter.get('/getusername/:userid', VerifyToken, getOwnerName)
 
