@@ -212,7 +212,8 @@ exports.getUserDp = async (req, res) => {
 
     try {
         const user = await userModel.findById({ _id: userid })
-        res.json(user?.DP)
+        if (user?.DP) res.json(user?.DP)
+        else res.json("https://t4.ftcdn.net/jpg/01/16/61/93/360_F_116619399_YA611bKNOW35ffK0OiyuaOcjAgXgKBui.jpg")
 
     } catch (error) {
         console.log(error);
