@@ -25,7 +25,7 @@ exports.SignUp = async (req, res) => {
             else {
 
                 try {
-                    await userModel.create({ Name: name, Email: email, Password: password, Contact: contact, DP:"https://t4.ftcdn.net/jpg/01/16/61/93/360_F_116619399_YA611bKNOW35ffK0OiyuaOcjAgXgKBui.jpg" })
+                    await userModel.create({ Name: name, Email: email, Password: password, Contact: contact, DP:"https://preview.redd.it/simba-what-do-you-think-about-this-character-v0-7ffmfdfy56pb1.jpg?width=640&crop=smart&auto=webp&s=8ef7bacd9c3aaa19bc5192bf7ad89dcdcd1069b3" })
 
                     res.json(`Hi ${name}! Welcome to blogging app, Please proceed to login!`)
 
@@ -213,7 +213,7 @@ exports.getUserDp = async (req, res) => {
     try {
         const user = await userModel.findById({ _id: userid })
         if (user?.DP) res.json(user?.DP)
-        else res.json("https://t4.ftcdn.net/jpg/01/16/61/93/360_F_116619399_YA611bKNOW35ffK0OiyuaOcjAgXgKBui.jpg")
+        else res.json("https://preview.redd.it/simba-what-do-you-think-about-this-character-v0-7ffmfdfy56pb1.jpg?width=640&crop=smart&auto=webp&s=8ef7bacd9c3aaa19bc5192bf7ad89dcdcd1069b3")
 
     } catch (error) {
         console.log(error);
