@@ -25,7 +25,7 @@ exports.SignUp = async (req, res) => {
             else {
 
                 try {
-                    await userModel.create({ Name: name, Email: email, Password: password, Contact: contact })
+                    await userModel.create({ Name: name, Email: email, Password: password, Contact: contact, DP:"https://t4.ftcdn.net/jpg/01/16/61/93/360_F_116619399_YA611bKNOW35ffK0OiyuaOcjAgXgKBui.jpg" })
 
                     res.json(`Hi ${name}! Welcome to blogging app, Please proceed to login!`)
 
