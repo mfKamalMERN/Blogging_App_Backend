@@ -9,7 +9,7 @@ const ConnectDB = async () => {
 
         console.log(`DB Connected`)
         
-        console.log(users[1].Name)
+        console.log(users[0].Name)
 
     } catch (error) {
         console.log(error);
