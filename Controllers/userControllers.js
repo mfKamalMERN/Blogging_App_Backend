@@ -25,7 +25,7 @@ exports.SignUp = async (req, res) => {
             else {
 
                 try {
-                    await userModel.create({ Name: name, Email: email, Password: password, Contact: contact, DP:"https://preview.redd.it/simba-what-do-you-think-about-this-character-v0-7ffmfdfy56pb1.jpg?width=640&crop=smart&auto=webp&s=8ef7bacd9c3aaa19bc5192bf7ad89dcdcd1069b3" })
+                    await userModel.create({ Name: name, Email: email, Password: password, Contact: contact, DP: "https://preview.redd.it/simba-what-do-you-think-about-this-character-v0-7ffmfdfy56pb1.jpg?width=640&crop=smart&auto=webp&s=8ef7bacd9c3aaa19bc5192bf7ad89dcdcd1069b3" })
 
                     res.json(`Hi ${name}! Welcome to blogging app, Please proceed to login!`)
 
@@ -65,7 +65,7 @@ exports.Login = (req, res) => {
                         const token = jwt.sign({ _id: user._id }, "jwt-secret-key", { expiresIn: "1h" })
 
                         // res.cookie('token', token);
-                        
+
                         const { _id, Name, Email, Contact, DP, Blogs, Followers, Followings, isPrivateAccount } = user;
                         // const{Password, ...Others} = user;
 
@@ -487,6 +487,19 @@ exports.PrivatePublic = (req, res) => {
                     res.json(`Switched to public account`)
                 }
             }
+        })
+        .catch(er => console.log(er))
+}
+
+exports.RemoveDP = (req, res) => {
+    const { loggeduserid } = req.params;
+    const { imgurl } = req.body;
+
+    userModel.findById({ _id: loggeduserid })
+        .then(usr => {
+            usr.DP = imgurl;
+            usr.save()
+            res.json(`DP removed.`)
         })
         .catch(er => console.log(er))
 }
