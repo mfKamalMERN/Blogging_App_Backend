@@ -503,3 +503,36 @@ exports.RemoveDP = (req, res) => {
         })
         .catch(er => console.log(er))
 }
+
+exports.UpdateContact = async (req, res) => {
+    const { loggeduserid, NrFormatContactValue } = req.body;
+
+    if (!loggeduserid || !NrFormatContactValue) {
+        return res.status(400).json({ message: "loggeduserid and NrFormatContactValue are required." });
+    }
+
+    try {
+        const user = await userModel.findById(loggeduserid);
+
+        if (!user) {
+            return res.status(404).json({ message: "User  not found" });
+        }
+
+        if (user.Contact == NrFormatContactValue) {
+            res.status(200).json({ message: `Already existing contact` })
+            return;
+        };
+
+        user.Contact = NrFormatContactValue;
+        await user.save();
+
+        return res.json({ message: "Contact updated successfully", Contact: user.Contact });
+
+    } catch (error) {
+        console.error('Error updating contact:', error); // Log the error for debugging
+        return res.status(500).json({
+            error: 'Internal Server Error',
+            message: 'An unexpected error occurred. Please try again later.'
+        });
+    }
+};

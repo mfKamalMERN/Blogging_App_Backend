@@ -7,3 +7,15 @@ exports.loginValidation = [body('email').isEmail().withMessage("Invalid Email").
 exports.updatePasswordValidation = [body('newpassword').isLength({ min: 8, max: 15 }).withMessage(`Pwd must be between 8 to 15 characters`)]
 
 exports.updateNameValidation = [body('newName').isLength({ min: 4, max: 25 }).withMessage(`Name must be atleast 3 characters long`)]
+
+exports.validIndianPhoneNumber = (req, res, next) => {
+    const { NrFormatContactValue } = req.body;
+    const regex = /^(?:\+91|0)?[789]\d{9}$/;
+
+    if (!regex.test(NrFormatContactValue)) {
+        res.json(`Invalid Contact`)
+        return;
+    };
+
+    next();
+}
