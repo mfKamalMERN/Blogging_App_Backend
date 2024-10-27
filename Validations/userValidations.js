@@ -13,7 +13,7 @@ exports.validIndianPhoneNumber = (req, res, next) => {
     const regex = /^(?:\+91|0)?[789]\d{9}$/;
 
     if (!regex.test(NrFormatContactValue)) {
-        res.json(`Invalid Contact`)
+        res.json({ message: `Invalid Contact` })
         return;
     };
 
