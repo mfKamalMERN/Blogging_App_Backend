@@ -560,14 +560,14 @@ exports.DeleteContact = (req, res) => {
                 return;
             };
 
-            user.Contact = null;
+            user.Contact = Number('');
             await user.save();
 
             return res.status(200).json({ message: "Contact deleted successfully", Contact: user.Contact });
 
         })
         .catch(er => {
-            console.error('Error updating contact:', er); // Log the error for debugging
+            console.error('Error deleting contact:', er); // Log the error for debugging
             return res.status(500).json({
                 error: 'Internal Server Error',
                 message: 'An unexpected error occurred. Please try again later.'
