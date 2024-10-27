@@ -3,6 +3,7 @@ const userModel = require("../Models/usermodel.js");
 const jwt = require('jsonwebtoken');
 const blogModel = require("../Models/blogmodel.js");
 const hashPassword = require("../HashPassword/hashPwd.js");
+const bcrypt = require('bcryptjs'); // Import bcryptjs for password comparison
 
 
 exports.SignUp = async (req, res) => {
@@ -60,10 +61,11 @@ exports.Login = (req, res) => {
 
     else {
         userModel.findOne({ Email: email })
-            .then((user) => {
+            .then(async (user) => {
                 if (user) {
+                    const isMatch = await bcrypt.compare(password, user.Password);
 
-                    if (user.Password === password) {
+                    if (isMatch) {
 
                         const token = jwt.sign({ _id: user._id }, "jwt-secret-key", { expiresIn: "1h" })
 
