@@ -563,7 +563,7 @@ exports.DeleteContact = (req, res) => {
             user.Contact = null;
             await user.save();
 
-            return res.status(200).json({ message: "Contact deleted successfully" });
+            return res.status(200).json({ message: "Contact deleted successfully", Contact: user.Contact });
 
         })
         .catch(er => {
