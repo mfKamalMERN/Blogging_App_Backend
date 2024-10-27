@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator");
 const userModel = require("../Models/usermodel.js");
 const jwt = require('jsonwebtoken');
 const blogModel = require("../Models/blogmodel.js");
+const hashPassword = require("../HashPassword/hashPwd.js");
 
 
 exports.SignUp = async (req, res) => {
@@ -25,7 +26,9 @@ exports.SignUp = async (req, res) => {
             else {
 
                 try {
-                    await userModel.create({ Name: name, Email: email, Password: password, Contact: contact, DP: "https://preview.redd.it/simba-what-do-you-think-about-this-character-v0-7ffmfdfy56pb1.jpg?width=640&crop=smart&auto=webp&s=8ef7bacd9c3aaa19bc5192bf7ad89dcdcd1069b3" })
+                    const hashedPassword = await hashPassword(password);
+
+                    await userModel.create({ Name: name, Email: email, Password: hashedPassword, Contact: contact, DP: "https://preview.redd.it/simba-what-do-you-think-about-this-character-v0-7ffmfdfy56pb1.jpg?width=640&crop=smart&auto=webp&s=8ef7bacd9c3aaa19bc5192bf7ad89dcdcd1069b3" })
 
                     res.json(`Hi ${name}! Welcome to blogging app, Please proceed to login!`)
 
@@ -536,3 +539,37 @@ exports.UpdateContact = async (req, res) => {
         });
     }
 };
+
+exports.DeleteContact = (req, res) => {
+    const { loggeduserid } = req.body;
+
+    if (!loggeduserid) {
+        return res.status(400).json({ message: "loggeduserid is required." });
+    }
+
+    userModel.findById(loggeduserid)
+        .then(async (user) => {
+            if (!user) {
+                return res.status(404).json({ message: "User  not found" });
+            }
+
+            if (!user.Contact) {
+                res.status(200).json({ message: `Contact is already deleted` })
+                return;
+            };
+
+            user.Contact = null;
+            await user.save();
+
+            return res.status(200).json({ message: "Contact deleted successfully" });
+
+        })
+        .catch(er => {
+            console.error('Error updating contact:', er); // Log the error for debugging
+            return res.status(500).json({
+                error: 'Internal Server Error',
+                message: 'An unexpected error occurred. Please try again later.'
+            });
+        })
+
+}
