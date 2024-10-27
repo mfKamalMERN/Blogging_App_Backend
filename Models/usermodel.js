@@ -11,7 +11,7 @@ const userschema = new mongoose.Schema({
     Followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "userModel" }],
     Followings: [{ type: mongoose.Schema.Types.ObjectId, ref: "userModel" }],
     isPrivateAccount: { type: Boolean, required: false },
-    hideContact: { type: Boolean , required: false },
+    showContact: { type: Boolean , required: false },
 })
 
 const userModel = mongoose.model('user', userschema)
