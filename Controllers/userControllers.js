@@ -616,33 +616,32 @@ exports.DeleteContact = async (req, res) => {
     }
 };
 
-exports.ShowHideContact = (req, res) => {
+exports.ShowHideContact = async (req, res) => {
     const { loggeduserid, Showcontact } = req.body;
 
     if (!loggeduserid) {
-        return res.status(400).json({ message: "loggeduserid or Show contact preference is required." });
+        return res.status(400).json({ message: "loggeduserid is required." });
     }
 
-    userModel.findById({ _id: loggeduserid })
-        .then((user) => {
-            // if (!user) {
-            //     return res.status(404).json({ message: "User not found" });
-            // }
+    try {
+        const user = await userModel.findById({ _id: loggeduserid })
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
-            user.showContact = Showcontact;
-            user.save();
+        user.showContact = Showcontact;
+        await user.save();
 
-            return res.status(200).json({
-                message: "Contact visibility updated successfully", ContactVisibilityUpdated: true, ShowContact: user.showContact
-            });
+        return res.status(200).json({
+            message: "Contact visibility updated successfully", ContactVisibilityUpdated: true, ShowContact: user.showContact
+        });
 
-        })
-        .catch(error => {
-            console.error(`Error while updating showhide contact`, error)
-            return res.status(500).json({
-                error: 'Internal Server Error',
-                message: 'An unexpected error occurred. Please try again later.'
-            });
-        })
+    } catch (error) {
+        console.error(`Error while updating showhide contact`, error)
+        return res.status(500).json({
+            error: 'Internal Server Error',
+            message: 'An unexpected error occurred. Please try again later.'
+        });
+    }
 
 }
