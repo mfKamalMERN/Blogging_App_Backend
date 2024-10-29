@@ -56,7 +56,7 @@ userRouter.patch('/removedp/:loggeduserid', RemoveDP)
 
 userRouter.patch('/updatecontact', validIndianPhoneNumber, UpdateContact)
 
-userRouter.patch('/deletecontact', DeleteContact)
+userRouter.patch('/deletecontact/:loggeduserid', DeleteContact)
 
 
 exports.userRouter = userRouter

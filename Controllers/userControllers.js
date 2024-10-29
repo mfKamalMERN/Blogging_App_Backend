@@ -543,7 +543,7 @@ exports.UpdateContact = async (req, res) => {
 };
 
 exports.DeleteContact = (req, res) => {
-    const { loggeduserid } = req.body;
+    const { loggeduserid } = req.params;
 
     if (!loggeduserid) {
         return res.status(400).json({ message: "loggeduserid is required." });
