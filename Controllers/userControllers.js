@@ -565,7 +565,7 @@ exports.DeleteContact = async (req, res) => {
         }
 
         // Delete the contact
-        user.Contact = null; // Set to null instead of Number('')
+        user.Contact = null;
         await user.save();
 
         return res.status(200).json({ message: "Contact deleted successfully", ContactDeleted: true });
