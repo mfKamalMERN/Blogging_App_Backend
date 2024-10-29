@@ -512,7 +512,7 @@ exports.RemoveDP = (req, res) => {
 exports.UpdateContact = async (req, res) => {
     const { loggeduserid, NrFormatContactValue, isDeleteContact } = req.body;
 
-    if (!isDeleteContact) {
+    if (isDeleteContact) {
         if (!loggeduserid || !NrFormatContactValue) {
             return res.status(400).json({ message: "loggeduserid and NrFormatContactValue are required." });
         }
