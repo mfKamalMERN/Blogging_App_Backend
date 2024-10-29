@@ -623,11 +623,11 @@ exports.ShowHideContact = (req, res) => {
         return res.status(400).json({ message: "loggeduserid or Show contact preference is required." });
     }
 
-    userModel.findById(loggeduserid)
+    userModel.findById({ _id: loggeduserid })
         .then((user) => {
-            if (!user) {
-                return res.status(404).json({ message: "User not found" });
-            }
+            // if (!user) {
+            //     return res.status(404).json({ message: "User not found" });
+            // }
 
             user.showContact = Showcontact;
             user.save();
