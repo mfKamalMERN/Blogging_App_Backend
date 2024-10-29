@@ -10,18 +10,21 @@ const bodyParser = require('body-parser')
 
 const app = express()
 const port = 7500;
+
+//db connection
 ConnectDB()
 
+//middlewares setup
 app.use(cors(CorsOptions))
 app.use(cookieParser())
-app.use(express.json())
+app.use(express.json()) //for parsing body
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('Public'))
 
-
+//Routes
 app.use('/', userRouter)
 app.use('/', blogRouter)
 
-
+//start server
 app.listen(port, () => console.log(`Server running at port ${port}`))
