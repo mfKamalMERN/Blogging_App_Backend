@@ -510,36 +510,73 @@ exports.RemoveDP = (req, res) => {
 }
 
 exports.UpdateContact = async (req, res) => {
-    const { loggeduserid, NrFormatContactValue } = req.body;
+    const { loggeduserid, NrFormatContactValue, isDeleteContact } = req.body;
 
-    if (!loggeduserid || !NrFormatContactValue) {
-        return res.status(400).json({ message: "loggeduserid and NrFormatContactValue are required." });
-    }
-
-    try {
-        const user = await userModel.findById(loggeduserid);
-
-        if (!user) {
-            return res.status(404).json({ message: "User  not found" });
+    if (!isDeleteContact) {
+        if (!loggeduserid || !NrFormatContactValue) {
+            return res.status(400).json({ message: "loggeduserid and NrFormatContactValue are required." });
         }
 
-        if (user.Contact == NrFormatContactValue) {
-            res.status(200).json({ message: `Already existing contact` })
-            return;
-        };
+        try {
+            const user = await userModel.findById(loggeduserid);
 
-        user.Contact = NrFormatContactValue;
-        await user.save();
+            if (!user) {
+                return res.status(404).json({ message: "User  not found" });
+            }
 
-        return res.json({ message: "Contact updated successfully", Contact: user.Contact });
+            if (user.Contact == NrFormatContactValue) {
+                res.status(200).json({ message: `Already existing contact` })
+                return;
+            };
 
-    } catch (error) {
-        console.error('Error updating contact:', error); // Log the error for debugging
-        return res.status(500).json({
-            error: 'Internal Server Error',
-            message: 'An unexpected error occurred. Please try again later.'
-        });
+            user.Contact = NrFormatContactValue;
+            await user.save();
+
+            return res.json({ message: "Contact updated successfully", Contact: user.Contact });
+
+        } catch (error) {
+            console.error('Error updating contact:', error); // Log the error for debugging
+            return res.status(500).json({
+                error: 'Internal Server Error',
+                message: 'An unexpected error occurred. Please try again later.'
+            });
+        }
     }
+
+    else {
+        if (!loggeduserid) {
+            return res.status(400).json({ message: "loggeduserid is required." });
+        }
+
+        try {
+            // Find the user by ID
+            const user = await userModel.findById(loggeduserid);
+
+            // Check if user exists
+            if (!user) {
+                return res.status(404).json({ message: "User  not found" });
+            }
+
+            // Check if contact exists
+            if (!user.Contact) {
+                return res.status(200).json({ message: "Contact is already deleted" });
+            }
+
+            // Delete the contact
+            user.Contact = null;
+            await user.save();
+
+            return res.status(200).json({ message: "Contact deleted successfully", ContactDeleted: true });
+
+        } catch (error) {
+            console.error('Error deleting contact:', error); // Log the error for debugging
+            return res.status(500).json({
+                error: 'Internal Server Error',
+                message: 'An unexpected error occurred. Please try again later.'
+            });
+        }
+    }
+
 };
 
 exports.DeleteContact = async (req, res) => {
