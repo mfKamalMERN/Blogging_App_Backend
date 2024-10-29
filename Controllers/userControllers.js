@@ -542,36 +542,39 @@ exports.UpdateContact = async (req, res) => {
     }
 };
 
-exports.DeleteContact = (req, res) => {
+exports.DeleteContact = async (req, res) => {
     const { loggeduserid } = req.params;
 
+    // Validate input
     if (!loggeduserid) {
         return res.status(400).json({ message: "loggeduserid is required." });
     }
 
-    userModel.findById(loggeduserid)
-        .then(async (user) => {
-            if (!user) {
-                return res.status(404).json({ message: "User  not found" });
-            }
+    try {
+        // Find the user by ID
+        const user = await UserModel.findById(loggeduserid);
 
-            if (!user.Contact) {
-                res.status(200).json({ message: `Contact is already deleted` })
-                return;
-            };
+        // Check if user exists
+        if (!user) {
+            return res.status(404).json({ message: "User  not found" });
+        }
 
-            user.Contact = Number('');
-            await user.save();
+        // Check if contact exists
+        if (!user.Contact) {
+            return res.status(200).json({ message: "Contact is already deleted" });
+        }
 
-            return res.status(200).json({ message: "Contact deleted successfully", ContactDeleted: true });
+        // Delete the contact
+        user.Contact = null; // Set to null instead of Number('')
+        await user.save();
 
-        })
-        .catch(er => {
-            console.error('Error deleting contact:', er); // Log the error for debugging
-            return res.status(500).json({
-                error: 'Internal Server Error',
-                message: 'An unexpected error occurred. Please try again later.'
-            });
-        })
+        return res.status(200).json({ message: "Contact deleted successfully", ContactDeleted: true });
 
-}
+    } catch (error) {
+        console.error('Error deleting contact:', error); // Log the error for debugging
+        return res.status(500).json({
+            error: 'Internal Server Error',
+            message: 'An unexpected error occurred. Please try again later.'
+        });
+    }
+};

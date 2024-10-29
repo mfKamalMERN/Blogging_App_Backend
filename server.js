@@ -9,12 +9,12 @@ const bodyParser = require('body-parser')
 
 
 const app = express()
-app.use(cors(CorsOptions))
+const port = 7500;
 ConnectDB()
 
+app.use(cors(CorsOptions))
 app.use(cookieParser())
 app.use(express.json())
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('Public'))
@@ -23,6 +23,5 @@ app.use(express.static('Public'))
 app.use('/', userRouter)
 app.use('/', blogRouter)
 
-const port = 7500
 
 app.listen(port, () => console.log(`Server running at port ${port}`))
