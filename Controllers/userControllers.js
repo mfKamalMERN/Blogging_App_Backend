@@ -619,7 +619,7 @@ exports.DeleteContact = async (req, res) => {
 exports.ShowHideContact = (req, res) => {
     const { loggeduserid, Showcontact } = req.body;
 
-    if (!loggeduserid || !Showcontact) {
+    if (!loggeduserid) {
         return res.status(400).json({ message: "loggeduserid or Show contact preference is required." });
     }
 
