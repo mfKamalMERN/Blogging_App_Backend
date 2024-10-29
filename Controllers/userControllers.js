@@ -628,6 +628,10 @@ exports.ShowHideContact = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
+        
+        if (user.showContact == Showcontact) {
+            return res.status(200).json({ message: "Contact already shown or hidden" });
+        }
 
         user.showContact = Showcontact;
         await user.save();
