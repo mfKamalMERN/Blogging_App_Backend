@@ -552,7 +552,7 @@ exports.DeleteContact = async (req, res) => {
 
     try {
         // Find the user by ID
-        const user = await UserModel.findById(loggeduserid);
+        const user = await userModel.findById(loggeduserid);
 
         // Check if user exists
         if (!user) {
