@@ -633,9 +633,9 @@ exports.ShowHideContact = (req, res) => {
             user.save();
 
             return res.status(200).json({
-                message: "Contact visibility updated successfully", ContactVisibilityUpdated: user.showContact
+                message: "Contact visibility updated successfully", ContactVisibilityUpdated: true, ShowContact: user.showContact
             });
-
+            
         })
         .catch(error => {
             console.error(`Error while updating showhide contact`, error)
