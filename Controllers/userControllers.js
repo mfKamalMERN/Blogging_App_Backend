@@ -619,8 +619,8 @@ exports.DeleteContact = async (req, res) => {
 exports.ShowHideContact = (req, res) => {
     const { loggeduserid, Showcontact } = req.body;
 
-    if (!loggeduserid) {
-        return res.status(400).json({ message: "loggeduserid is required." });
+    if (!loggeduserid || !Showcontact) {
+        return res.status(400).json({ message: "loggeduserid or Show contact preference is required." });
     }
 
     userModel.findById(loggeduserid)
@@ -635,7 +635,7 @@ exports.ShowHideContact = (req, res) => {
             return res.status(200).json({
                 message: "Contact visibility updated successfully", ContactVisibilityUpdated: true, ShowContact: user.showContact
             });
-            
+
         })
         .catch(error => {
             console.error(`Error while updating showhide contact`, error)
