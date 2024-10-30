@@ -2,8 +2,8 @@ const { validationResult } = require("express-validator");
 const userModel = require("../Models/usermodel.js");
 const jwt = require('jsonwebtoken');
 const blogModel = require("../Models/blogmodel.js");
-const hashPassword = require("../HashPassword/hashPwd.js");
-const bcrypt = require('bcryptjs'); // Import bcryptjs for password comparison
+// const hashPassword = require("../HashPassword/hashPwd.js");
+// const bcrypt = require('bcrypt'); // Import bcryptjs for password comparison
 
 
 exports.SignUp = async (req, res) => {
@@ -27,9 +27,9 @@ exports.SignUp = async (req, res) => {
             else {
 
                 try {
-                    const hashedPassword = await hashPassword(password);
+                    // const hashedPassword = await hashPassword(password);
 
-                    await userModel.create({ Name: name, Email: email, Password: hashedPassword, Contact: contact, DP: "https://preview.redd.it/simba-what-do-you-think-about-this-character-v0-7ffmfdfy56pb1.jpg?width=640&crop=smart&auto=webp&s=8ef7bacd9c3aaa19bc5192bf7ad89dcdcd1069b3" })
+                    await userModel.create({ Name: name, Email: email, Password: password, Contact: contact, DP: "https://preview.redd.it/simba-what-do-you-think-about-this-character-v0-7ffmfdfy56pb1.jpg?width=640&crop=smart&auto=webp&s=8ef7bacd9c3aaa19bc5192bf7ad89dcdcd1069b3" })
 
                     res.json(`Hi ${name}! Welcome to blogging app, Please proceed to login!`)
 
@@ -63,7 +63,8 @@ exports.Login = (req, res) => {
         userModel.findOne({ Email: email })
             .then(async (user) => {
                 if (user) {
-                    const isMatch = await bcrypt.compare(password, user.Password);
+                    // const isMatch = await bcrypt.compare(password, user.Password);
+                    const isMatch = user.Password ===  password;
 
                     if (isMatch) {
 
