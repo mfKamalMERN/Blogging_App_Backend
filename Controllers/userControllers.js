@@ -3,7 +3,7 @@ const userModel = require("../Models/usermodel.js");
 const jwt = require('jsonwebtoken');
 const blogModel = require("../Models/blogmodel.js");
 const hashPassword = require("../HashPassword/hashPwd.js");
-const bcrypt = require('bcryptjs'); // Import bcryptjs for password comparison
+const bcrypt = require('bcrypt'); // Import bcryptjs for password comparison
 
 
 exports.SignUp = async (req, res) => {
