@@ -64,7 +64,7 @@ exports.Login = (req, res) => {
             .then(async (user) => {
                 if (user) {
                     // const isMatch = await bcrypt.compare(password, user.Password);
-                    const isMatch = user.Password ===  password;
+                    const isMatch = user.Password === password;
 
                     if (isMatch) {
 
@@ -115,18 +115,33 @@ exports.FollowUnfollow = async (req, res) => {
         }
 
         else {
-            targetuser.Followers.push(loggeduserid)
+            if (!targetuser.isPrivateAccount) {
 
-            me.Followings.push(targetuser._id)
+                targetuser.Followers.push(loggeduserid)
 
-            await targetuser.save()
+                me.Followings.push(targetuser._id)
 
-            await me.save()
+                await targetuser.save()
 
-            res.json(`Followed user ${targetuser.Name}`)
+                await me.save()
+
+                return res.json(`Followed user ${targetuser.Name}`)
+            }
+
+            if (targetuser.FollowRequests.includes(loggeduserid)) {
+                const idx = targetuser.FollowRequests.findIndex((id) => id == loggeduserid);
+                targetuser.FollowRequests.splice(idx, 1);
+                await targetuser.save();
+                return res.json(`Follow request Cancelled`);
+            }
+
+            targetuser.FollowRequests.push(loggeduserid);
+            await targetuser.save();
+
+            return res.json(`Follow request sent to ${targetuser.Name}`);
         }
-
-    } catch (error) {
+    }
+    catch (error) {
         console.log(error);
     }
 }
@@ -487,9 +502,15 @@ exports.PrivatePublic = (req, res) => {
             }
             else {
                 if (user.isPrivateAccount === isPrivate) res.json(`Already a public account`)
+
                 else {
-                    user.isPrivateAccount = isPrivate
-                    await user.save()
+                    user.isPrivateAccount = isPrivate;
+
+                    if (user.FollowRequests.length) {
+                        user.FollowRequests = [];
+                    }
+                    await user.save();
+
                     res.json(`Switched to public account`)
                 }
             }
