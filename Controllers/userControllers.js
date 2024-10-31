@@ -385,8 +385,8 @@ exports.Find_New_People = async (req, res) => {
 
         for (let user of allusers) {
 
-            const { _id, Name, DP, Followers } = user
-            OtherUsers.push({ _id, Name, DP, Followers })
+            const { _id, Name, DP, Followers, FollowRequests, isPrivateAccount } = user
+            OtherUsers.push({ _id, Name, DP, Followers, FollowRequests, isPrivateAccount })
 
         }
 
