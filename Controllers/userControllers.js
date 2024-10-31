@@ -293,9 +293,9 @@ exports.GetFollowers = (req, res) => {
 
                     const user = await userModel.findById({ _id: id })
 
-                    const { _id, Name, DP, Followers } = user
+                    const { _id, Name, DP, Followers, isPrivateAccount, FollowRequests } = user
 
-                    Followwers.push({ _id, Name, DP, Followers })
+                    Followwers.push({ _id, Name, DP, Followers, isPrivateAccount, FollowRequests })
 
                 } catch (error) {
                     console.log(error);
