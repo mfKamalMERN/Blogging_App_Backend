@@ -629,7 +629,7 @@ exports.ShowHideContact = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        
+
         if (user.showContact == Showcontact) {
             return res.status(200).json({ message: "Contact already shown or hidden" });
         }
@@ -649,4 +649,35 @@ exports.ShowHideContact = async (req, res) => {
         });
     }
 
+}
+
+exports.ShowHideContactDetails = (req, res) => {
+    const { loggeduserid, preference } = req.body;
+
+    if (!loggeduserid) return res.status(400).json({ message: "loggeduserid is required." });
+
+    userModel.findById(loggeduserid)
+        .then(async (user) => {
+
+            if (!user) return res.status(404).json({
+                message: "User not found"
+            });
+
+            if (user.showContactDetails == preference) return res.status(200).json({
+                message:
+                    "Contact details already shown or hidden"
+            });
+
+            user.showContactDetails = preference;
+            await user.save();
+
+            res.status(200).json({ message: `Preferences updated`, ContactDetailsShownUpdated: true, Preference: user.showContactDetails });
+
+        })
+        .catch(err => {
+            res.status(500).json({
+                message: `Internal Server Error`,
+                error: err
+            })
+        })
 }
