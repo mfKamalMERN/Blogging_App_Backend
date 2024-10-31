@@ -362,11 +362,11 @@ exports.GetBlogLikesUsers = async (req, res) => {
 
         for (let usrid of targetBlogLikes) {
 
-            const likeduser = await userModel.findById({ _id: usrid })
+            const likeduser = await userModel.findById(usrid);
 
-            const { _id, Name, DP, Followers } = likeduser
+            const { _id, Name, DP, Followers, isPrivateAccount, FollowRequests } = likeduser
 
-            likedUsers.push({ _id, Name, DP, Followers })
+            likedUsers.push({ _id, Name, DP, Followers, isPrivateAccount, FollowRequests })
         }
 
         res.json({ LikedUsers: likedUsers, Token: req.cookies.token })
