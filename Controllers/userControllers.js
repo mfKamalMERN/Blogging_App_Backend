@@ -742,3 +742,36 @@ exports.GetRequests = async (req, res) => {
     }
 
 }
+
+exports.RejectRequest = async (req, res) => {
+    const { loggeduserid } = req.params;
+    const { userid } = req.body;
+
+    if (!loggeduserid) {
+        return res.status(400).json({ message: "loggeduserid is required." });
+    }
+
+    try {
+        const LoggedUser = await userModel.findById(loggeduserid);
+
+        if (!LoggedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (LoggedUser.FollowRequests.includes(userid)) {
+            const index = LoggedUser.FollowRequests.indexOf(userid);
+            LoggedUser.FollowRequests.splice(index, 1);
+            await LoggedUser.save();
+            return res.status(200).json({ message: "Request rejected" });
+        }
+
+        res.status(200).json({ message: `No request found to reject` })
+
+    } catch (error) {
+        console.error(`Error while rejecting request`, error);
+        res.status(500).json({
+            message: `Internal Server Error`,
+            Error: error.message
+        })
+    }
+}
