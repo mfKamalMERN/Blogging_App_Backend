@@ -825,3 +825,56 @@ exports.AcceptRequest = async (req, res) => {
         });
     }
 }
+
+exports.RemoveFollower = (req, res) => {
+    const { loggeduserid } = req.params;
+    const { followerid } = req.body;
+
+    // Validate input
+    if (!loggeduserid || !followerid) {
+        return res.status(400).json({ message: "Both loggeduserid and followerid are required" })
+    }
+
+    userModel.findById(loggeduserid)
+        .then(async LoggedUser => {
+            if (!LoggedUser) {
+                return res.status(404).json({ message: "Logged user not found." });
+            }
+
+            const fIndex = LoggedUser.Followers.findIndex((id) => id == followerid);
+            if (fIndex === -1) {
+                return res.status(400).json({ message: "No follower found to remove." });
+            }
+
+            try {
+                const FollowerUser = await userModel.findById(followerid);
+                if (!FollowerUser) {
+                    LoggedUser.Followers.splice(fIndex, 1);
+                    return res.status(404).json({ message: "Follower user not found." });
+                }
+
+                // Remove the follower
+                LoggedUser.Followers.splice(fIndex, 1);
+
+                FollowerUser.Followings = FollowerUser.Followings.filter((id) => id != loggeduserid);
+
+                await Promise.all([LoggedUser.save(), FollowerUser.save()]);
+
+                return res.status(200).json({ message: "Follower removed.", FollowerRemoved: true });
+
+            } catch (error) {
+                console.error(`Error while removing follower:`, error);
+                return res.status(500).json({
+                    message: "Internal Server Error",
+                    error: error.message
+                });
+            }
+        })
+        .catch(error => {
+            console.error(`Error while finding logged user:`, error);
+            return res.status(500).json({
+                message: "Internal Server Error",
+                error: error.message
+            });
+        })
+}
