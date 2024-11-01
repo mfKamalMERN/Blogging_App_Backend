@@ -705,7 +705,7 @@ exports.ShowHideContactDetails = (req, res) => {
 
 exports.GetRequests = async (req, res) => {
     const LoggedUserID = req.params.loggeduserid;
-    let requestedUsers = [];
+    const requestedUsers = [];
 
     if (!LoggedUserID) {
         return res.status(400).json({ message: "loggeduserid is required." });
@@ -718,9 +718,9 @@ exports.GetRequests = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        if (!user.FollowRequests.length) {
-            return res.status(200).json({ message: "No requests found", Requests: false });
-        }
+        // if (!user.FollowRequests.length) {
+        //     return res.status(200).json({ message: "No requests found", Requests: false });
+        // }
 
         for (let userid of user.FollowRequests) {
 
