@@ -1,5 +1,5 @@
 const express = require('express')
-const { SignUp, Login, FollowUnfollow, Logout, MyProfile, UploadProfilePic, UpdatePassword, UpdateName, getUserDp, getOwnerName, getCommentererName, GetUsers, GetFollowers, CheckFollowingStatus, GetFollowings, Find_New_People, DeleteMyAccount, GetUserBlogs, GetBlogLikesUsers, GetUser, PrivatePublic, RemoveDP, UpdateContact, DeleteContact, ShowHideContact, ShowHideContactDetails, GetRequests } = require('../Controllers/userControllers.js')
+const { SignUp, Login, FollowUnfollow, Logout, MyProfile, UploadProfilePic, UpdatePassword, UpdateName, getUserDp, getOwnerName, getCommentererName, GetUsers, GetFollowers, CheckFollowingStatus, GetFollowings, Find_New_People, DeleteMyAccount, GetUserBlogs, GetBlogLikesUsers, GetUser, PrivatePublic, RemoveDP, UpdateContact, DeleteContact, ShowHideContact, ShowHideContactDetails, GetRequests, RejectRequest } = require('../Controllers/userControllers.js')
 const { signUpValidation, loginValidation, updatePasswordValidation, updateNameValidation, validIndianPhoneNumber } = require('../Validations/userValidations.js')
 const VerifyToken = require('../VerifyToken/VerifyToken.js')
 const { upload } = require('../Multer/Multer.js')
@@ -63,6 +63,8 @@ userRouter.patch('/showhidecontact', ShowHideContact)
 userRouter.patch('/showhidecontactdetails', ShowHideContactDetails)
 
 userRouter.get('/getrequests/:loggeduserid', GetRequests)
+
+userRouter.patch('/rejectrequest/:loggeduserid', RejectRequest)
 
 
 exports.userRouter = userRouter
