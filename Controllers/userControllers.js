@@ -775,3 +775,51 @@ exports.RejectRequest = async (req, res) => {
         })
     }
 }
+
+exports.AcceptRequest = async (req, res) => {
+    const { loggeduserid } = req.params;
+    const { userid } = req.body;
+
+    // Validate input
+    if (!loggeduserid || !userid) {
+        return res.status(400).json({ message: "Both loggeduserid and userid are required." });
+    }
+
+    if (loggeduserid === userid) {
+        return res.status(400).json({ message: "You cannot follow yourself." });
+    }
+
+    try {
+        const LoggedUser  = await userModel.findById(loggeduserid);
+        if (!LoggedUser ) {
+            return res.status(404).json({ message: "Logged user not found." });
+        }
+
+        const requestIndex = LoggedUser .FollowRequests.indexOf(userid);
+        if (requestIndex === -1) {
+            return res.status(400).json({ message: "No follow request found to accept." });
+        }
+
+        // Remove the follow request
+        LoggedUser .FollowRequests.splice(requestIndex, 1);
+        
+        const user = await userModel.findById(userid);
+        if (!user) {
+            return res.status(404).json({ message: "User  to follow not found." });
+        }
+
+        // Update followings and followers
+        user.Followings.push(loggeduserid);
+        LoggedUser .Followers.push(userid);
+
+        await Promise.all([user.save(), LoggedUser.save()]);
+
+        return res.status(200).json({ message: "Request accepted." });
+    } catch (error) {
+        console.error(`Error while accepting request:`, error);
+        return res.status(500).json({
+            message: "Internal Server Error",
+            error: error.message
+        });
+    }
+}
