@@ -704,7 +704,7 @@ exports.ShowHideContactDetails = (req, res) => {
 }
 
 exports.GetRequests = async (req, res) => {
-    const LoggedUserID = req.body.loggeduserid;
+    const LoggedUserID = req.params.loggeduserid;
     let requestedUsers = [];
 
     if (!LoggedUserID) {
