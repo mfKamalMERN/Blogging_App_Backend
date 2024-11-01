@@ -754,15 +754,17 @@ exports.RejectRequest = async (req, res) => {
     try {
         const LoggedUser = await userModel.findById(loggeduserid);
 
-        if (!LoggedUser) {
-            return res.status(404).json({ message: "User not found" });
+        if (!LoggedUser || !userid) {
+            return res.status(404).json({ message: "Missing details from request" });
         }
 
         if (LoggedUser.FollowRequests.includes(userid)) {
             const index = LoggedUser.FollowRequests.indexOf(userid);
+
             LoggedUser.FollowRequests.splice(index, 1);
             await LoggedUser.save();
-            return res.status(200).json({ message: "Request rejected", RequestUpdated: true });
+
+            return res.status(200).json({ message: "Request rejected", RequestUpdated: true, UpdatedRequests: LoggedUser.FollowRequests });
         }
 
         res.status(400).json({ message: `No request found to reject` })
