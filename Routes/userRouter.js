@@ -62,7 +62,7 @@ userRouter.patch('/showhidecontact', ShowHideContact)
 
 userRouter.patch('/showhidecontactdetails', ShowHideContactDetails)
 
-userRouter.get('/getrequests', GetRequests)
+userRouter.get('/getrequests/:loggeduserid', GetRequests)
 
 
 exports.userRouter = userRouter
