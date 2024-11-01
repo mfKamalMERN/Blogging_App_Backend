@@ -705,7 +705,7 @@ exports.ShowHideContactDetails = (req, res) => {
 
 exports.GetRequests = async (req, res) => {
     const LoggedUserID = req.params.loggeduserid;
-    let requestedUsers = [];
+    const requestedUsers = [];
 
     if (!LoggedUserID) {
         return res.status(400).json({ message: "loggeduserid is required." });
