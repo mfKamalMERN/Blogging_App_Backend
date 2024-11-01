@@ -702,3 +702,43 @@ exports.ShowHideContactDetails = (req, res) => {
             })
         })
 }
+
+exports.GetRequests = async (req, res) => {
+    const LoggedUserID = req.body.loggeduserid;
+    let requestedUsers = [];
+
+    if (!LoggedUserID) {
+        return res.status(400).json({ message: "loggeduserid is required." });
+    }
+
+    try {
+        const user = await userModel.findById(LoggedUserID);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (!user.FollowRequests.length) {
+            return res.status(200).json({ message: "No requests found", Requests: false });
+        }
+
+        for (let userid of user.FollowRequests) {
+
+            const user = await userModel.findById(userid);
+            if (user) {
+                const { _id, Name, DP } = user;
+                requestedUsers.push({ _id, Name, DP });
+            }
+        }
+
+        res.status(200).json({ message: "Requests found", Requests: requestedUsers });
+
+    } catch (error) {
+        console.error(`Error while getting requests`, error);
+        return res.status(500).json({
+            error: 'Internal Server Error',
+            message: 'An unexpected error occurred. Please try again later.'
+        });
+    }
+
+}
