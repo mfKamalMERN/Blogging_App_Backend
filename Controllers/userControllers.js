@@ -762,10 +762,10 @@ exports.RejectRequest = async (req, res) => {
             const index = LoggedUser.FollowRequests.indexOf(userid);
             LoggedUser.FollowRequests.splice(index, 1);
             await LoggedUser.save();
-            return res.status(200).json({ message: "Request rejected" });
+            return res.status(200).json({ message: "Request rejected", RequestUpdated: true });
         }
 
-        res.status(200).json({ message: `No request found to reject` })
+        res.status(400).json({ message: `No request found to reject` })
 
     } catch (error) {
         console.error(`Error while rejecting request`, error);
