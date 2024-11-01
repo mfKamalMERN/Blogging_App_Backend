@@ -790,19 +790,19 @@ exports.AcceptRequest = async (req, res) => {
     }
 
     try {
-        const LoggedUser  = await userModel.findById(loggeduserid);
-        if (!LoggedUser ) {
+        const LoggedUser = await userModel.findById(loggeduserid);
+        if (!LoggedUser) {
             return res.status(404).json({ message: "Logged user not found." });
         }
 
-        const requestIndex = LoggedUser .FollowRequests.indexOf(userid);
+        const requestIndex = LoggedUser.FollowRequests.indexOf(userid);
         if (requestIndex === -1) {
             return res.status(400).json({ message: "No follow request found to accept." });
         }
 
         // Remove the follow request
-        LoggedUser .FollowRequests.splice(requestIndex, 1);
-        
+        LoggedUser.FollowRequests.splice(requestIndex, 1);
+
         const user = await userModel.findById(userid);
         if (!user) {
             return res.status(404).json({ message: "User  to follow not found." });
@@ -810,11 +810,11 @@ exports.AcceptRequest = async (req, res) => {
 
         // Update followings and followers
         user.Followings.push(loggeduserid);
-        LoggedUser .Followers.push(userid);
+        LoggedUser.Followers.push(userid);
 
         await Promise.all([user.save(), LoggedUser.save()]);
 
-        return res.status(200).json({ message: "Request accepted." });
+        return res.status(200).json({ message: "Request accepted.", RequestUpdated: true, UpdatedRequests: LoggedUser.FollowRequests });
     } catch (error) {
         console.error(`Error while accepting request:`, error);
         return res.status(500).json({
