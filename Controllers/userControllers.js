@@ -449,13 +449,13 @@ exports.GetUserBlogs = (req, res) => {
 
                         }
 
-                        res.json({ UserBlogs: targetblogs, Token: req.cookies.token })
+                        res.json({ UserBlogs: targetblogs, Token: req.cookies.token, Name: targetuser.Name })
 
                     } catch (error) {
                         console.log(error)
                     }
                 }
-                else res.json({ UserBlogs: targetblogs, Token: req.cookies.token })
+                else res.json({ UserBlogs: targetblogs, Token: req.cookies.token, Name: targetuser.Name })
             }
 
             else {
@@ -467,7 +467,7 @@ exports.GetUserBlogs = (req, res) => {
 
                     }
 
-                    res.json({ UserBlogs: targetblogs, Token: req.cookies.token })
+                    res.json({ UserBlogs: targetblogs, Token: req.cookies.token, Name: targetuser.Name })
 
                 } catch (error) {
                     console.log(error)
