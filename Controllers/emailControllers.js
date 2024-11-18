@@ -127,7 +127,7 @@ exports.GetMailDetails = async (req, res) => {
         const receivedByUser = await userModel.findById(mail.SentTo);
         const ccUser = await userModel.findById(mail.CC);
 
-        const mailDetails = { sentBy: sentByUser.Name, sentTo: receivedByUser.Name, Subject: mail.Subject, EmailBody: mail.MailBody, CC: ccUser.Name, Attachments: mail.Attachments }
+        const mailDetails = { sentBy: sentByUser.Name, sentTo: receivedByUser.Name, Subject: mail.Subject, EmailBody: mail.MailBody, CC: ccUser?.Name, Attachments: mail.Attachments }
 
         return res.status(200).json(mailDetails);
 
