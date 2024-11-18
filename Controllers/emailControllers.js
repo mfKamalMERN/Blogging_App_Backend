@@ -66,7 +66,8 @@ exports.GetReceivedMails = async (req, res) => {
         const ReceivedMails = await emailModel.find({ SentTo: loggeduserid })
         for (let mail of ReceivedMails) {
             const sentByUser = await userModel.findById(mail.SentBy)
-            receivedMails.push({ _id: mail._id, SentBy: sentByUser.Name, Subject: mail.Subject })
+            const sentToUser = await userModel.findById(mail.SentTo)
+            receivedMails.push({ _id: mail._id, SentBy: sentByUser.Name, Subject: mail.Subject, SentTo: sentToUser.Name })
         }
         return res.status(200).json(receivedMails);
 
@@ -91,7 +92,8 @@ exports.GetSentMails = async (req, res) => {
 
         for (let mail of SentMails) {
             const sentByUser = await userModel.findById(mail.SentBy)
-            sentMails.push({ _id: mail._id, SentBy: sentByUser.Name, Subject: mail.Subject })
+            const sentToUser = await userModel.findById(mail.SentTo)
+            sentMails.push({ _id: mail._id, SentBy: sentByUser.Name, Subject: mail.Subject, SentTo: sentToUser.Name })
         }
 
         return res.status(200).json(sentMails);
