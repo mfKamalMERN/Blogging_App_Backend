@@ -878,3 +878,25 @@ exports.RemoveFollower = (req, res) => {
             });
         })
 }
+
+exports.GetAllUsernames = (req, res) => {
+    const { loggeduserid } = req.params;
+
+    if (!loggeduserid) {
+        return res.status(400).json({ message: "Invalid request." });
+    }
+
+    userModel.find()
+        .then(allUsers => {
+            const usernames = allUsers?.map(user => user.Name) || [];
+            return res.status(200).json({ message: "Users Fetched", usernames });
+        })
+        .catch(err => {
+            console.error(`Error while finding all users:`, err);
+            return res.status(500).json({
+                message: "Internal Server Error",
+                error: err.message
+            });
+
+        })
+}
