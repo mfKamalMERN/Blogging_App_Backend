@@ -29,7 +29,7 @@ exports.NewMail = async (req, res) => {
             const createdMail = await emailModel.create({ SentTo: sentToUser?._id, SentBy: loggeduserid, CC: ccUser?._id, Subject, MailBody });
 
             for (let file of files) {
-                filePaths.push(`http://localhost:7500/Attachments/${file.filename}`)
+                filePaths.push(`https://blogging-app-backend-dpk0.onrender.com/Attachments/${file.filename}`)
             }
 
             createdMail.Attachments = filePaths;
