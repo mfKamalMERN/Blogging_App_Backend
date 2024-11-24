@@ -69,7 +69,14 @@ exports.GetReceivedMails = async (req, res) => {
             const sentToUser = await userModel.findById(mail.SentTo)
             receivedMails.push({ _id: mail._id, SentBy: sentByUser.Name, Subject: mail.Subject, SentTo: sentToUser.Name })
         }
-        return res.status(200).json(receivedMails);
+
+        const CcMails = await emailModel.find({ CC: loggeduserid })
+        for (let mail of CcMails) {
+            const sentByUser = await userModel.findById(mail.SentBy)
+            const sentToUser = await userModel.findById(mail.SentTo)
+            receivedMails.push({ _id: mail._id, SentBy: sentByUser.Name, Subject: mail.Subject, SentTo: sentToUser.Name })
+        }
+        return res.status(200).json([...new Set(receivedMails)]);
 
     } catch (error) {
         return res.status(500).json({ message: "Error in finding received mails" });
@@ -91,9 +98,11 @@ exports.GetSentMails = async (req, res) => {
         const SentMails = await emailModel.find({ SentBy: loggeduserid })
 
         for (let mail of SentMails) {
-            const sentByUser = await userModel.findById(mail.SentBy)
-            const sentToUser = await userModel.findById(mail.SentTo)
-            sentMails.push({ _id: mail._id, SentBy: sentByUser.Name, Subject: mail.Subject, SentTo: sentToUser.Name })
+            if (mail) {
+                const sentByUser = await userModel.findById(mail?.SentBy)
+                const sentToUser = await userModel.findById(mail?.SentTo)
+                sentMails.push({ _id: mail?._id, SentBy: sentByUser?.Name, Subject: mail?.Subject, SentTo: sentToUser?.Name })
+            }
         }
 
         return res.status(200).json(sentMails);
