@@ -31,7 +31,7 @@ exports.NewMail = async (req, res) => {
             for (let file of files) {
                 filePaths.push(`https://blogging-app-backend-dpk0.onrender.com/Attachments/${file.filename}`)
             }
-            const targetMail = emailModel.findById(createdMail._id);
+            const targetMail = await emailModel.findById(createdMail._id);
             targetMail.Attachments = filePaths;
             await targetMail.save();
 
