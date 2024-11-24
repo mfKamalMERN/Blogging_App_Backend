@@ -900,3 +900,44 @@ exports.GetAllUsernames = (req, res) => {
 
         })
 }
+
+exports.GetUserName = (req, res) => {
+    const { loggeduserid, userid } = req.params;
+
+    if (!loggeduserid || !userid) {
+        return res.status(400).json({ message: "Invalid request." });
+    }
+
+    userModel.findById(userid)
+        .then(async targetUser => {
+            if (!targetUser) {
+                return res.status(404).json({ message: "User not found." });
+            }
+
+            try {
+                const loggedUser = await userModel.findById(loggeduserid);
+                if (!loggedUser) {
+                    return res.status(404).json({ message: "Logged user not found." });
+                }
+
+                const userName = targetUser?.Name;
+
+                res.status(200).json(userName);
+
+            } catch (error) {
+                console.error(`Error while finding logged user:`, error);
+                return res.status(500).json({
+                    message: "Internal Server Error",
+                    error: error.message
+                });
+
+            }
+        })
+        .catch(err => {
+            console.error(`Error while finding user by id:`, err);
+            return res.status(500).json({
+                message: "Internal Server Error",
+                error: err.message
+            })
+        })
+}
