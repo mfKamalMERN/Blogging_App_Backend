@@ -418,12 +418,20 @@ exports.DeleteMyAccount = (req, res) => {
 
                 } catch (error) {
                     console.log(error);
-
                 }
 
             }
 
-            await blogModel.findOneAndDelete({ Owner: user._id })
+            try {
+                const blogs = await blogModel.find({ Owner: user._id })
+                for (let blog of blogs) {
+                    await blogModel.findByIdAndDelete(blog?._id)
+                }
+            }
+            catch (error) {
+                console.log(error)
+            }
+
 
             res.clearCookie('token').json(`Account for ${user?.Name} is deleted`)
         })
