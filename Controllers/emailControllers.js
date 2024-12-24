@@ -146,3 +146,25 @@ exports.GetMailDetails = async (req, res) => {
 
 
 }
+
+exports.UnsendEmail = (req, res) => {
+    const { emailid, loggeduserid } = req.params;
+
+    if (!loggeduserid) {
+        return res.status(400).json({ message: "Invalid user id" });
+    }
+
+    emailModel.findByIdAndDelete(emailid)
+        .then((email) => {
+            if (!email) {
+                return res.status(404).json({ message: "Email not found" });
+            }
+            if (email.SentBy != loggeduserid) {
+                return res.status(403).json({ message: "You are not authorized to delete this email" });
+            }
+            return res.status(200).json({ message: "Email un-sent successfully" });
+        })
+        .catch((err) => {
+            return res.status(500).json({ message: "Error in un sending email" });
+        })
+}
